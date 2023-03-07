@@ -75,6 +75,8 @@ namespace BusinessObject.Models
 
                 entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
 
+                entity.Property(e => e.CategoryGeneral).HasMaxLength(55);
+
                 entity.Property(e => e.CategoryName)
                     .IsRequired()
                     .HasMaxLength(15);

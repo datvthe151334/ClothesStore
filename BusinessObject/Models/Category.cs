@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace BusinessObject.Models
 {
@@ -15,7 +14,8 @@ namespace BusinessObject.Models
         public string CategoryName { get; set; }
         public string Description { get; set; }
         public bool? IsActive { get; set; }
-        [JsonIgnore]
+        public string CategoryGeneral { get; set; }
+
         public virtual ICollection<Product> Products { get; set; }
     }
 }

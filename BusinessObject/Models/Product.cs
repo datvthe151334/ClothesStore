@@ -21,7 +21,7 @@ namespace BusinessObject.Models
         public short? ReorderLevel { get; set; }
         public bool Discontinued { get; set; }
         public bool? IsActive { get; set; }
-        public string? Picture { get; set; }
+        public string Picture { get; set; }
 
         public virtual Category Category { get; set; }
         [JsonIgnore]
