@@ -6,22 +6,22 @@ namespace ClothesStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : Controller
+    public class CustomersController : Controller
     {
-        private ICategoryRepository repository;
+        private ICustomerRepository repository;
 
-        public CategoriesController(ICategoryRepository repo)
+        public CustomersController(ICustomerRepository repo)
         {
             repository = repo;
         }
 
-        //GET: api/Categories
+        //GET: api/Customers
         [HttpGet]
-        public async Task<IActionResult> GetCategories()
+        public async Task<IActionResult> GetCustomers()
         {
             try
             {
-                return StatusCode(200, await repository.GetCategories());
+                return StatusCode(200, await repository.GetCustomers());
             }
             catch (ApplicationException ae)
             {
@@ -33,13 +33,13 @@ namespace ClothesStoreAPI.Controllers
             }
         }
 
-        //GET: api/Categories/id
+        //GET: api/Customers/id
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCategoryById(int id)
+        public async Task<IActionResult> GetCustomerById(string id)
         {
             try
             {
-                return StatusCode(200, await repository.GetCategoryById(id));
+                return StatusCode(200, await repository.GetCustomerById(id));
             }
             catch (ApplicationException ae)
             {
@@ -53,11 +53,11 @@ namespace ClothesStoreAPI.Controllers
 
         //POST
         [HttpPost]
-        public async Task<IActionResult> CreateCategory([FromBody] CategoryDTO categoryDTO)
+        public async Task<IActionResult> CreateCustomer([FromBody] CustomerDTO customerDTO)
         {
             try
             {
-                return StatusCode(200, await repository.CreateCategory(categoryDTO));
+                return StatusCode(200, await repository.CreateCustomer(customerDTO));
             }
             catch (ApplicationException ae)
             {
@@ -71,11 +71,11 @@ namespace ClothesStoreAPI.Controllers
 
         //PUT
         [HttpPut]
-        public async Task<IActionResult> UpdateCategory([FromBody] CategoryDTO categoryDTO)
+        public async Task<IActionResult> UpdateCustomer([FromBody] CustomerDTO customerDTO)
         {
             try
             {
-                return StatusCode(200, await repository.UpdateCategory(categoryDTO));
+                return StatusCode(200, await repository.UpdateCustomer(customerDTO));
             }
             catch (ApplicationException ae)
             {
@@ -89,11 +89,11 @@ namespace ClothesStoreAPI.Controllers
 
         //DELETE
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategory(int id)
+        public async Task<IActionResult> DeleteCustomer(string id)
         {
             try
             {
-                await repository.DeleteCategory(id);
+                await repository.DeleteCustomer(id);
                 return StatusCode(204, "Delete successfully!");
             }
             catch (ApplicationException ae)

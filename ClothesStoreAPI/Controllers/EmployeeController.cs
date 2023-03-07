@@ -6,22 +6,22 @@ namespace ClothesStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : Controller
+    public class EmployeeController : Controller
     {
-        private ICategoryRepository repository;
+        private IEmployeeRepository repository;
 
-        public CategoriesController(ICategoryRepository repo)
+        public EmployeeController(IEmployeeRepository repo)
         {
             repository = repo;
         }
 
-        //GET: api/Categories
+        //GET: api/Employees
         [HttpGet]
-        public async Task<IActionResult> GetCategories()
+        public async Task<IActionResult> GetEmployees()
         {
             try
             {
-                return StatusCode(200, await repository.GetCategories());
+                return StatusCode(200, await repository.GetEmployees());
             }
             catch (ApplicationException ae)
             {
@@ -33,13 +33,13 @@ namespace ClothesStoreAPI.Controllers
             }
         }
 
-        //GET: api/Categories/id
+        //GET: api/Employees/id
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCategoryById(int id)
+        public async Task<IActionResult> GetEmployeeById(int id)
         {
             try
             {
-                return StatusCode(200, await repository.GetCategoryById(id));
+                return StatusCode(200, await repository.GetEmployeeById(id));
             }
             catch (ApplicationException ae)
             {
@@ -53,11 +53,11 @@ namespace ClothesStoreAPI.Controllers
 
         //POST
         [HttpPost]
-        public async Task<IActionResult> CreateCategory([FromBody] CategoryDTO categoryDTO)
+        public async Task<IActionResult> CreateEmployee([FromBody] EmployeeCreateUpdateDTO employeeDTO)
         {
             try
             {
-                return StatusCode(200, await repository.CreateCategory(categoryDTO));
+                return StatusCode(200, await repository.CreateEmployee(employeeDTO));
             }
             catch (ApplicationException ae)
             {
@@ -71,11 +71,11 @@ namespace ClothesStoreAPI.Controllers
 
         //PUT
         [HttpPut]
-        public async Task<IActionResult> UpdateCategory([FromBody] CategoryDTO categoryDTO)
+        public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeCreateUpdateDTO employeeDTO)
         {
             try
             {
-                return StatusCode(200, await repository.UpdateCategory(categoryDTO));
+                return StatusCode(200, await repository.UpdateEmployee(employeeDTO));
             }
             catch (ApplicationException ae)
             {
@@ -89,11 +89,11 @@ namespace ClothesStoreAPI.Controllers
 
         //DELETE
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategory(int id)
+        public async Task<IActionResult> DeleteEmployee(int id)
         {
             try
             {
-                await repository.DeleteCategory(id);
+                await repository.DeleteEmployee(id);
                 return StatusCode(204, "Delete successfully!");
             }
             catch (ApplicationException ae)

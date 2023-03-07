@@ -88,8 +88,8 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //PUT
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromBody] ProductCreateUpdateDTO productDTO)
+        [HttpPut]
+        public async Task<IActionResult> UpdateProduct([FromBody] ProductCreateUpdateDTO productDTO)
         {
             try
             {

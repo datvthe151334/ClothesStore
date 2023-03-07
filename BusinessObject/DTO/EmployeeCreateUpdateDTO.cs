@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace BusinessObject.Models
+namespace BusinessObject.DTO
 {
-    public partial class Employee
+    public class EmployeeCreateUpdateDTO
     {
-        public Employee()
-        {
-            Accounts = new HashSet<Account>();
-            Orders = new HashSet<Order>();
-        }
-
         public int EmployeeId { get; set; }
         public string LastName { get; set; }
         public string FirstName { get; set; }
@@ -22,11 +18,5 @@ namespace BusinessObject.Models
         public DateTime? HireDate { get; set; }
         public string Address { get; set; }
         public bool? IsActive { get; set; }
-
-        public virtual Department Department { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<Account> Accounts { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<Order> Orders { get; set; }
     }
 }
