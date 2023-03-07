@@ -3127,6 +3127,7 @@ font-weight: 300;
 }
 .sort-grid {
     padding: 11px 0;
+	padding-bottom: 40px;
     border-top: 1px solid #d2d2d2;
     border-bottom: 1px solid #d2d2d2;
     margin: 35px 0;
