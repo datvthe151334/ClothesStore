@@ -23,6 +23,11 @@ namespace Repository
             return _mapper.Map<List<CategoryDTO>>(await CategoryDAO.GetCategories());
         }
 
+        public async Task<List<string>> GetCategoryGeneral()
+        {
+            return await CategoryDAO.GetCategoryGeneral();
+        }
+
         public async Task<CategoryDTO> GetCategoryById(int id)
         {
             return _mapper.Map<CategoryDTO>(await CategoryDAO.GetCategoryById(id));

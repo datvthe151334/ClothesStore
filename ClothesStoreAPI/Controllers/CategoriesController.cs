@@ -33,6 +33,24 @@ namespace ClothesStoreAPI.Controllers
             }
         }
 
+        //GET: api/Categories/getCategoryGeneral
+        [HttpGet("getCategoryGeneral")]
+        public async Task<IActionResult> GetCategoryGeneral()
+        {
+            try
+            {
+                return StatusCode(200, await repository.GetCategoryGeneral());
+            }
+            catch (ApplicationException ae)
+            {
+                return StatusCode(400, ae.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         //GET: api/Categories/id
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCategoryById(int id)

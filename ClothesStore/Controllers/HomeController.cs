@@ -24,14 +24,26 @@ namespace ClothesStore.Controllers
             DefaultCustomerApiUrl = "https://localhost:7059/api/Customers";
         }
 
-        public async Task<IActionResult> Index([FromQuery] int? CategoryId)
+        public async Task<IActionResult> Index([FromQuery] string? CategoryGeneral)
         {
+            if (CategoryGeneral == null) CategoryGeneral = "men";
 
             //Get Products
-            if (CategoryId == null) CategoryId = 1;
-            DefaultProductApiUrl = DefaultProductApiUrl + "/filter/" + CategoryId;
             HttpResponseMessage productsResponse = await client.GetAsync(DefaultProductApiUrl);
             string strProducts = await productsResponse.Content.ReadAsStringAsync();
+
+            HttpResponseMessage menProductsResponse = await client.GetAsync(DefaultProductApiUrl + "/filterByCatGeneral/men");
+            string strMenProducts = await menProductsResponse.Content.ReadAsStringAsync();
+
+            HttpResponseMessage womenProductsResponse = await client.GetAsync(DefaultProductApiUrl + "/filterByCatGeneral/women");
+            string strWomenProducts = await womenProductsResponse.Content.ReadAsStringAsync();
+
+            HttpResponseMessage babyProductsResponse = await client.GetAsync(DefaultProductApiUrl + "/filterByCatGeneral/baby");
+            string strBabyProducts = await babyProductsResponse.Content.ReadAsStringAsync();
+
+            //Get CategoryGeneral
+            HttpResponseMessage categoryGeneralResponse = await client.GetAsync(DefaultCategoryApiUrl + "/getCategoryGeneral");
+            string strCategoryGeneral = await categoryGeneralResponse.Content.ReadAsStringAsync();
 
             //Get Categories
             HttpResponseMessage categoriesResponse = await client.GetAsync(DefaultCategoryApiUrl);
@@ -47,15 +59,25 @@ namespace ClothesStore.Controllers
             string strCustomers = await customersResponse.Content.ReadAsStringAsync();
 
             List<ProductDTO>? listProducts = JsonSerializer.Deserialize<List<ProductDTO>>(strProducts, options);
+            List<ProductDTO>? listMenProducts = JsonSerializer.Deserialize<List<ProductDTO>>(strMenProducts, options);
+            List<ProductDTO>? listWomenProducts = JsonSerializer.Deserialize<List<ProductDTO>>(strWomenProducts, options);
+            List<ProductDTO>? listBabyProducts = JsonSerializer.Deserialize<List<ProductDTO>>(strBabyProducts, options);
+            
+            List<string>? listCategoryGeneral = JsonSerializer.Deserialize<List<string>>(strCategoryGeneral, options);
             List<CategoryDTO>? listCategories = JsonSerializer.Deserialize<List<CategoryDTO>>(strCategories, options);
             List<CustomerDTO>? listCustomers = JsonSerializer.Deserialize<List<CustomerDTO>>(strCustomers, options);
 
-            ViewBag.listCategories = listCategories;
+            ViewBag.listMenProducts = listMenProducts.OrderByDescending(x => x.ProductId).Take(12).ToList();
+            ViewBag.listWomenProducts = listWomenProducts.OrderByDescending(x => x.ProductId).Take(12).ToList();
+            ViewBag.listBabyProducts = listBabyProducts.OrderByDescending(x => x.ProductId).Take(12).ToList();
 
-            ViewData["CurCatId"] = CategoryId;
+            ViewBag.listCategories = listCategories;
+            ViewBag.listCategoryGeneral = listCategoryGeneral;
+
+            ViewData["CurCatGeneral"] = CategoryGeneral;
             ViewData["TotalCustomer"] = listCustomers.Count;
 
-            return View(listProducts);
+            return View(listProducts.OrderByDescending(x => x.ProductId).Take(12).ToList());
         }
     }
 }

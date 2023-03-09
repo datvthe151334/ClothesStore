@@ -44,6 +44,23 @@ namespace DataAccess
             return listProducts;
         }
 
+        public static async Task<List<Product>> GetProductsByCategoryGeneral(string catGeneral)
+        {
+            var listProducts = new List<Product>();
+            try
+            {
+                using (var context = new ClothesStoreDBContext())
+                {
+                    listProducts = await context.Products.Where(x => x.Category.CategoryGeneral == catGeneral).Include(x => x.Category).ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return listProducts;
+        }
+
         public static async Task<Product> GetProductById(int id)
         {
             Product product = new Product();

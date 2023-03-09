@@ -51,13 +51,32 @@ namespace ClothesStoreAPI.Controllers
             }
         }
 
-        //GET: api/Products/categoryId
-        [HttpGet("filter/{categoryId}")]
+        //GET: api/Products/filterByCatId/categoryId
+        [HttpGet("filterByCatId/{categoryId}")]
         public async Task<IActionResult> GetProductByCategory(int categoryId)
         {
             try
             {
                 return StatusCode(200, await repository.GetProductsByCategory(categoryId));
+            }
+            catch (ApplicationException ae)
+            {
+                return StatusCode(400, ae.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
+        //GET: api/Products/filterByCatGeneral/categoryGeneral
+        [HttpGet("filterByCatGeneral/{categoryGeneral}")]
+        public async Task<IActionResult> GetProductByCategoryGeneral(string categoryGeneral)
+        {
+            try
+            {
+                return StatusCode(200, await repository.GetProductsByCategoryGeneral(categoryGeneral));
             }
             catch (ApplicationException ae)
             {

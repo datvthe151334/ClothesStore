@@ -27,6 +27,23 @@ namespace DataAccess
             return listCategories;
         }
 
+        public static async Task<List<string>> GetCategoryGeneral()
+        {
+            var listCategoryGeneral = new List<string>();
+            try
+            {
+                using (var context = new ClothesStoreDBContext())
+                {
+                    listCategoryGeneral = await context.Categories.Select(x => x.CategoryGeneral).Distinct().ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return listCategoryGeneral;
+        }
+
         public static async Task<Category> GetCategoryById(int id)
         {
             Category category = new Category();
