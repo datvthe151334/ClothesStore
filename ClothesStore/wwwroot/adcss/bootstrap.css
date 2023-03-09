@@ -3557,7 +3557,13 @@ tbody.collapse.in {
   position: relative;
   display: inline-block;
   vertical-align: middle;
-  margin-left:300px;
+  margin-left:840px;
+}
+.btn-group-page {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 300px;
 }
 .btn-group > .btn,
 .btn-group-vertical > .btn {
