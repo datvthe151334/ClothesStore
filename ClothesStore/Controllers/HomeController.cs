@@ -35,7 +35,7 @@ namespace ClothesStore.Controllers
             HttpResponseMessage menProductsResponse = await client.GetAsync(DefaultProductApiUrl + "/filterByCatGeneral/men");
             string strMenProducts = await menProductsResponse.Content.ReadAsStringAsync();
 
-            HttpResponseMessage womenProductsResponse = await client.GetAsync(DefaultProductApiUrl + "/filterByCatGeneral/women");
+            HttpResponseMessage womenProductsResponse = await client.GetAsync(DefaultProductApiUrl + "/filterByCatGeneral/woman");
             string strWomenProducts = await womenProductsResponse.Content.ReadAsStringAsync();
 
             HttpResponseMessage babyProductsResponse = await client.GetAsync(DefaultProductApiUrl + "/filterByCatGeneral/baby");
