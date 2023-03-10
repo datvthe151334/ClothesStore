@@ -49,14 +49,14 @@ namespace ClothesStore.Controllers
             HttpResponseMessage categoriesResponse = await client.GetAsync(DefaultCategoryApiUrl);
             string strCategories = await categoriesResponse.Content.ReadAsStringAsync();
 
+            //Get Customers
+            HttpResponseMessage customersResponse = await client.GetAsync(DefaultCustomerApiUrl);
+            string strCustomers = await customersResponse.Content.ReadAsStringAsync();
+
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             };
-
-            //Get Customers
-            HttpResponseMessage customersResponse = await client.GetAsync(DefaultCustomerApiUrl);
-            string strCustomers = await customersResponse.Content.ReadAsStringAsync();
 
             List<ProductDTO>? listProducts = JsonSerializer.Deserialize<List<ProductDTO>>(strProducts, options);
             List<ProductDTO>? listMenProducts = JsonSerializer.Deserialize<List<ProductDTO>>(strMenProducts, options);

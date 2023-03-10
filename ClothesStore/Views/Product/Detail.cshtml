@@ -1,4 +1,7 @@
-﻿		<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+﻿@using BusinessObject.DTO
+@model ProductDTO
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
 			<div class="modal-dialog">
 				<!-- Modal content-->
 				<div class="modal-content">
@@ -121,7 +124,7 @@
 						<div class="agile_inner_breadcrumb">
 
 						   <ul class="w3_short">
-								<li><a href="index.html">Home</a><i>|</i></li>
+								<li><a asp-controller="home" asp-action="index">Home</a><i>|</i></li>
 								<li>Single Page</li>
 							</ul>
 						 </div>
@@ -137,24 +140,24 @@
 			<div class="grid images_3_of_2">
 				<div class="flexslider">
 
-					<ul class="slides">
-						<li data-thumb="images/d2.jpg">
-							<div class="thumb-image"> <img src="images/d2.jpg" data-imagezoom="true" class="img-responsive"> </div>
+					<ul class="slides" style="list-style: none;">
+						<li data-thumb="/images/d2.jpg">
+							<div class="thumb-image"> <img src="~/@Html.DisplayFor(modelItem => Model.Picture)" data-imagezoom="true" class="img-responsive"> </div>
 						</li>
-						<li data-thumb="images/d1.jpg">
-							<div class="thumb-image"> <img src="images/d1.jpg" data-imagezoom="true" class="img-responsive"> </div>
+						@*<li data-thumb="images/d1.jpg">
+							<div class="thumb-image"> <img src="~/@Html.DisplayFor(modelItem => Model.Picture)" data-imagezoom="true" class="img-responsive"> </div>
 						</li>	
 						<li data-thumb="images/d3.jpg">
-							<div class="thumb-image"> <img src="images/d3.jpg" data-imagezoom="true" class="img-responsive"> </div>
-						</li>
+							<div class="thumb-image"> <img src="~/@Html.DisplayFor(modelItem => Model.Picture)" data-imagezoom="true" class="img-responsive"> </div>
+						</li>*@
 					</ul>
 					<div class="clearfix"></div>
 				</div>	
 			</div>
 		</div>
 		<div class="col-md-8 single-right-left simpleCart_shelfItem">
-					<h3>Big Wing Sneakers  (Navy)</h3>
-					<p><span class="item_price">$650</span> <del>- $900</del></p>
+					<h3>@Html.DisplayFor(modelItem => Model.ProductName)</h3>
+					<p><span class="item_price">$@Html.DisplayFor(modelItem => Model.UnitPrice)</span> <del>- $900</del></p>
 					<div class="rating1">
 						<span class="starRating">
 							<input id="rating5" type="radio" name="rating" value="5">
@@ -250,9 +253,9 @@
 					   <div class="tab1">
 
 							<div class="single_page_agile_its_w3ls">
-							  <h6>Lorem ipsum dolor sit amet</h6>
-							   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elPellentesque vehicula augue eget nisl ullamcorper, molestie blandit ipsum auctor. Mauris volutpat augue dolor.Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut lab ore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. labore et dolore magna aliqua.</p>
-							   <p class="w3ls_para">Lorem ipsum dolor sit amet, consectetur adipisicing elPellentesque vehicula augue eget nisl ullamcorper, molestie blandit ipsum auctor. Mauris volutpat augue dolor.Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut lab ore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. labore et dolore magna aliqua.</p>
+							  <h6>@Html.DisplayFor(modelItem => Model.ProductName)</h6>
+							   <p>@Html.DisplayFor(modelItem => Model.QuantityPerUnit)</p>
+							   @*<p class="w3ls_para">Lorem ipsum dolor sit amet, consectetur adipisicing elPellentesque vehicula augue eget nisl ullamcorper, molestie blandit ipsum auctor. Mauris volutpat augue dolor.Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut lab ore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. labore et dolore magna aliqua.</p>*@
 							</div>
 						</div>
 						<!--//tab_one-->
@@ -303,24 +306,26 @@
 		  <!--/slider_owl-->
 
 			<div class="w3_agile_latest_arrivals">
-			<h3 class="wthree_text_info">Featured <span>Arrivals</span></h3>	
+			<h3 class="wthree_text_info">Featured <span>Arrivals</span></h3>
+				@foreach (ProductDTO item in @ViewBag.listRelatedProducts)
+				{
 					  <div class="col-md-3 product-men single">
 								<div class="men-pro-item simpleCart_shelfItem">
 									<div class="men-thumb-item">
-										<img src="images/w2.jpg" alt="" class="pro-image-front">
-										<img src="images/w2.jpg" alt="" class="pro-image-back">
+										<img src="~/@Html.DisplayFor(modelItem => item.Picture)" alt="" class="pro-image-front">
+										<img src="~/@Html.DisplayFor(modelItem => item.Picture)" alt="" class="pro-image-back">
 											<div class="men-cart-pro">
 												<div class="inner-men-cart-pro">
-													<a href="single.html" class="link-product-add-cart">Quick View</a>
+													<a asp-controller="product" asp-action="detail" asp-route-id="@item.ProductId" class="link-product-add-cart">Quick View</a>
 												</div>
 											</div>
 											<span class="product-new-top">New</span>
 
 									</div>
 									<div class="item-info-product ">
-										<h4><a href="single.html">Sleeveless Solid Blue Top</a></h4>
+										<h4><a href="single.html">@Html.DisplayFor(modelItem => item.ProductName)</a></h4>
 										<div class="info-product-price">
-											<span class="item_price">$140.99</span>
+											<span class="item_price">$@Html.DisplayFor(modelItem => item.UnitPrice)</span>
 											<del>$189.71</del>
 										</div>
 										<div class="snipcart-details top_brand_home_details item_add single-item hvr-outline-out button2">
@@ -342,123 +347,8 @@
 
 									</div>
 								</div>
-							</div>
-					   <div class="col-md-3 product-men single">
-								<div class="men-pro-item simpleCart_shelfItem">
-									<div class="men-thumb-item">
-										<img src="images/w4.jpg" alt="" class="pro-image-front">
-										<img src="images/w4.jpg" alt="" class="pro-image-back">
-											<div class="men-cart-pro">
-												<div class="inner-men-cart-pro">
-													<a href="single.html" class="link-product-add-cart">Quick View</a>
-												</div>
-											</div>
-											<span class="product-new-top">New</span>
-
-									</div>
-									<div class="item-info-product ">
-										<h4><a href="single.html">Black Basic Shorts</a></h4>
-										<div class="info-product-price">
-											<span class="item_price">$120.99</span>
-											<del>$189.71</del>
-										</div>
-										<div class="snipcart-details top_brand_home_details item_add single-item hvr-outline-out button2">
-															<form action="#" method="post">
-																<fieldset>
-																	<input type="hidden" name="cmd" value="_cart">
-																	<input type="hidden" name="add" value="1">
-																	<input type="hidden" name="business" value=" ">
-																	<input type="hidden" name="item_name" value="Black Basic Shorts">
-																	<input type="hidden" name="amount" value="30.99">
-																	<input type="hidden" name="discount_amount" value="1.00">
-																	<input type="hidden" name="currency_code" value="USD">
-																	<input type="hidden" name="return" value=" ">
-																	<input type="hidden" name="cancel_return" value=" ">
-																	<input type="submit" name="submit" value="Add to cart" class="button">
-																</fieldset>
-															</form>
-														</div>
-
-									</div>
-								</div>
-							</div>
-						 <div class="col-md-3 product-men single">
-								<div class="men-pro-item simpleCart_shelfItem">
-									<div class="men-thumb-item">
-										<img src="images/s6.jpg" alt="" class="pro-image-front">
-										<img src="images/s6.jpg" alt="" class="pro-image-back">
-											<div class="men-cart-pro">
-												<div class="inner-men-cart-pro">
-													<a href="single.html" class="link-product-add-cart">Quick View</a>
-												</div>
-											</div>
-											<span class="product-new-top">New</span>
-
-									</div>
-									<div class="item-info-product ">
-										<h4><a href="single.html">Aero Canvas Loafers  </a></h4>
-										<div class="info-product-price">
-											<span class="item_price">$120.99</span>
-											<del>$199.71</del>
-										</div>
-										<div class="snipcart-details top_brand_home_details item_add single-item hvr-outline-out button2">
-															<form action="#" method="post">
-																<fieldset>
-																	<input type="hidden" name="cmd" value="_cart">
-																	<input type="hidden" name="add" value="1">
-																	<input type="hidden" name="business" value=" ">
-																	<input type="hidden" name="item_name" value="Aero Canvas Loafers">
-																	<input type="hidden" name="amount" value="30.99">
-																	<input type="hidden" name="discount_amount" value="1.00">
-																	<input type="hidden" name="currency_code" value="USD">
-																	<input type="hidden" name="return" value=" ">
-																	<input type="hidden" name="cancel_return" value=" ">
-																	<input type="submit" name="submit" value="Add to cart" class="button">
-																</fieldset>
-															</form>
-														</div>
-
-									</div>
-								</div>
-						</div>
-					   <div class="col-md-3 product-men single">
-								<div class="men-pro-item simpleCart_shelfItem">
-									<div class="men-thumb-item">
-										<img src="images/w7.jpg" alt="" class="pro-image-front">
-										<img src="images/w7.jpg" alt="" class="pro-image-back">
-											<div class="men-cart-pro">
-												<div class="inner-men-cart-pro">
-													<a href="single.html" class="link-product-add-cart">Quick View</a>
-												</div>
-											</div>
-											<span class="product-new-top">New</span>
-
-									</div>
-									<div class="item-info-product ">
-										<h4><a href="single.html">Ankle Length Socks</a></h4>
-										<div class="info-product-price">
-											<span class="item_price">$100.99</span>
-											<del>$159.71</del>
-										</div>
-										<div class="snipcart-details top_brand_home_details item_add single-item hvr-outline-out button2">
-															<form action="#" method="post">
-																<fieldset>
-																	<input type="hidden" name="cmd" value="_cart">
-																	<input type="hidden" name="add" value="1">
-																	<input type="hidden" name="business" value=" ">
-																	<input type="hidden" name="item_name" value="Ankle Length Socks">
-																	<input type="hidden" name="amount" value="30.99">
-																	<input type="hidden" name="discount_amount" value="1.00">
-																	<input type="hidden" name="currency_code" value="USD">
-																	<input type="hidden" name="return" value=" ">
-																	<input type="hidden" name="cancel_return" value=" ">
-																	<input type="submit" name="submit" value="Add to cart" class="button">
-																</fieldset>
-															</form>
-														</div>
-
-									</div>
-								</div>
+					   </div>
+							}
 							</div>
 							<div class="clearfix"> </div>
 					<!--//slider_owl-->
