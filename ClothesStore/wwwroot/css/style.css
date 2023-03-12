@@ -1350,7 +1350,11 @@ position:relative;
     margin-top: 35px;
 }
 .product-men img {
-    width: 100%;
+	display: block;
+	max-width: 600px;
+	max-height: 285px;
+	width: auto;
+	height: auto;
 }
 /*-- //new_arrivals --*/
 /*-- Shopping-Cart-PopUp --*/
