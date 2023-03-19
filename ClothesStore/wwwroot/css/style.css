@@ -51,7 +51,7 @@ label{
 }
 .header ul li {
     display: inline-block;
-    width: 24.5%;
+    width: 32.5%;
     text-align: center;
     color: #fff;
     font-size: 13px;
@@ -59,6 +59,7 @@ label{
     letter-spacing: 1px;
     border-right: 1px solid #464444;
 }
+
 .header ul li a {
      color: #fff;
     text-decoration: none;
