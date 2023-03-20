@@ -11,5 +11,6 @@ namespace Repository
     {
         Task<List<AccountDTO>> GetAccounts();
         Task<AccountDTO> GetAccountById(int id);
+        Task DeleteAccount(int id);
     }
 }

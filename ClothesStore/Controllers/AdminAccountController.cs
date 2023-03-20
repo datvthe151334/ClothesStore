@@ -53,5 +53,12 @@ namespace ClothesStore.Controllers
 
             return View(listAccounts);
         }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            await client.DeleteAsync(DefaultAccountApiUrl + "/" + id);
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

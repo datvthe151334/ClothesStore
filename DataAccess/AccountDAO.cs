@@ -44,5 +44,35 @@ namespace DataAccess
             }
             return account;
         }
+
+        public static async Task DeleteAccount(int id)
+        {
+            try
+            {
+                Account? account = new Account();
+                using (var context = new ClothesStoreDBContext())
+                {
+                    account = await context.Accounts.Include(x => x.Customer).Include(x => x.Employee).SingleOrDefaultAsync(x => x.AccountId == id);
+                    if(account != null)
+                    {
+                        account.IsActive = false;
+                        if (account.Role == 1)
+                        {
+                            account.Employee.IsActive = false;
+                        }
+                        if (account.Role == 2)
+                        {
+                            account.Customer.IsActive = false;
+                        }
+                        context.Entry<Account>(account).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                        await context.SaveChangesAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

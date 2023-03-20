@@ -50,5 +50,24 @@ namespace ClothesStoreAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        //DELETE
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAccount(int id)
+        {
+            try
+            {
+                await repository.DeleteAccount(id);
+                return StatusCode(204, "Delete successfully!");
+            }
+            catch (ApplicationException ae)
+            {
+                return StatusCode(400, ae.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

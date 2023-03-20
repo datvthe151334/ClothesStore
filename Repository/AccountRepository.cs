@@ -24,5 +24,9 @@ namespace Repository
         {
             return _mapper.Map<AccountDTO>(await AccountDAO.GetAccountById(id));
         }
+        public async Task DeleteAccount(int id)
+        {
+            await AccountDAO.DeleteAccount(id);
+        }
     }
 }
