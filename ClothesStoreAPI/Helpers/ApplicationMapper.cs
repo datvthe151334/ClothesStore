@@ -12,8 +12,7 @@ namespace ClothesStoreAPI.Helpers
             CreateMap<Product, ProductDTO>()
                 .ForMember(
                     dest => dest.CategoryName,
-                    opt => opt.MapFrom(src => src.Category.CategoryName)
-                );
+                    opt => opt.MapFrom(src => src.Category.CategoryName));
             CreateMap<ProductDTO, Product>();
             CreateMap<Product, ProductCreateUpdateDTO>().ReverseMap();
 
@@ -27,10 +26,19 @@ namespace ClothesStoreAPI.Helpers
             CreateMap<Employee, EmployeeDTO>()
                 .ForMember(
                     dest => dest.DepartmentName,
-                    opt => opt.MapFrom(src => src.Department.DepartmentName)
-                );
+                    opt => opt.MapFrom(src => src.Department.DepartmentName));
             CreateMap<EmployeeDTO, Employee>();
             CreateMap<Employee, EmployeeCreateUpdateDTO>().ReverseMap();
+
+            //AccountMapper
+            CreateMap<Account, AccountDTO>()
+                .ForMember(
+                    dest => dest.CustomerName,
+                    opt => opt.MapFrom(src => src.Customer.ContactName))
+                .ForMember(
+                    dest => dest.EmployeeName,
+                    opt => opt.MapFrom(src => src.Employee.LastName));
+            CreateMap<AccountDTO, Account>();
         }
     }
 }

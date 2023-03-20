@@ -1,11 +1,11 @@
 ﻿@using BusinessObject.DTO
-@model List<CategoryDTO>
+@model List<EmployeeDTO>
 
 <div class="chit-chat-layer1">
 	<div class="col-md-12">
 			   <div class="work-progres">
 							<div class="chit-chat-heading">
-								  Category Management
+								  Employee Management
 								  <div class="btn-group m-r-sm mail-hidden-options" style="display: inline-block;">
 									<div class="btn-group">
 										<a class="btn btn-default" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-folder"></i> <span class="caret"></span></a>
@@ -17,7 +17,7 @@
 											<li><a href="#">Export File PDF</a></li>
 											<li><a href="#">Import File PDF</a></li>
 											<li class="divider"></li>
-											<li><a asp-controller="admincategory" asp-action="create">New</a></li>
+											<li><a asp-controller="adminemployee" asp-action="create">New</a></li>
 										</ul>
 									</div>
 
@@ -28,9 +28,14 @@
 								  <thead>
 									<tr>
 									  <th>#</th>
-									  <th>Category Name</th>
-									  <th>Category General</th>                                   
-									  <th>Description</th>
+									  <th>Last Name</th>
+									  <th>First General</th>                                   
+									  <th>Department</th>
+									  <th>Title</th>
+									  <th>Title Of Courtesy</th>
+									  <th>Birth Date</th>
+									  <th>Hire Date</th>
+									  <th>Address</th>
 									  <th>Active</th>
 									  <th></th>
 								  </tr>
@@ -41,9 +46,24 @@
 							  {
 							<tr>
 								  <td>@index</td> @{index++;}
-								  <td>@Html.DisplayFor(modelItem => item.CategoryName)</td>
-								  <td>@Html.DisplayFor(modelItem => item.CategoryGeneral)</td>
-								  <td>@Html.DisplayFor(modelItem => item.Description)</td>
+								  <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
+								  <td>@Html.DisplayFor(modelItem => item.LastName)</td>
+								  <td>@Html.DisplayFor(modelItem => item.DepartmentName)</td>
+								  <td>@Html.DisplayFor(modelItem => item.Title)</td>
+								  <td>@Html.DisplayFor(modelItem => item.TitleOfCourtesy)</td>
+								  <td>
+									  @if (item.BirthDate.HasValue)
+									  {
+										@item.BirthDate.Value.ToString("MM/dd/yyyy")
+									  }
+								  </td>
+								  <td>
+									  @if (item.HireDate.HasValue)
+									  {
+										@item.HireDate.Value.ToString("MM/dd/yyyy")
+									  }
+								  </td>
+								  <td>@Html.DisplayFor(modelItem => item.Address)</td>
 								  @if(item.IsActive == true){
 									<td><span class="label label-info">active</span></td>
 								  } else
@@ -58,7 +78,7 @@
 							<div class="ripple-wrapper"></div></a>
 							<ul class="dropdown-menu float-right">
 								<li>
-									<a asp-controller="admincategory" asp-action="edit" asp-route-id="@item.CategoryId" title="">
+									<a asp-controller="adminemployee" asp-action="edit" asp-route-id="@item.EmployeeId" title="">
 										<i class="fa fa-pencil-square-o icon_9"> </i>
 										Edit
 									</a>
@@ -77,7 +97,7 @@
 								</li>
 								<li class="divider"></li>
 								<li>
-									<a asp-controller="admincategory" asp-action="delete" asp-route-id="@item.CategoryId" class="font-red" title="">
+									<a asp-controller="adminemployee" asp-action="delete" asp-route-id="@item.EmployeeId" class="font-red" title="">
 										<i class="fa fa-times" icon_9=""> </i>
 										Delete
 									</a>
@@ -89,22 +109,22 @@
 							  }
 						  </tbody>
 					  </table>
-					   <span class="text-muted m-r-sm">Showing @ViewData["TotalCateOnPage"] of @ViewData["TotalCate"] </span>
+					   <span class="text-muted m-r-sm">Showing @ViewData["TotalOnPage"] of @ViewData["Total"] </span>
 					   <div class="btn-group-page" style="align-items">
 									@if ((int)(ViewData["PageNum"]) > 1)
 									{
-										<a asp-controller="admincategory" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]-1) class="btn btn-default"><i class="fa fa-angle-left"></i></a>
+										<a asp-controller="adminemployee" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]-1) class="btn btn-default"><i class="fa fa-angle-left"></i></a>
 									}
 									@for (var i = 1; i <= (int)(@ViewData["TotalPage"]); i++)
 									{
 										if ((i - (int)@ViewData["PageNum"]) <= 2 && (i - (int)@ViewData["PageNum"]) >= -2)
 										{
-											<a class="btn btn-default" asp-controller="admincategory" asp-action="index" asp-route-PageNum=@i style=@((int)(ViewData["PageNum"])==@i ? "background-color: #5BC0DE" : "")>@i</a>
+											<a class="btn btn-default" asp-controller="adminemployee" asp-action="index" asp-route-PageNum=@i style=@((int)(ViewData["PageNum"])==@i ? "background-color: #5BC0DE" : "")>@i</a>
 										}
 									}
 									@if ((int)ViewData["PageNum"] < (int)ViewData["TotalPage"])
 									{
-										<a asp-controller="admincategory" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]+1) class="btn btn-default"><i class="fa fa-angle-right"></i></a>
+										<a asp-controller="adminemployee" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]+1) class="btn btn-default"><i class="fa fa-angle-right"></i></a>
 									}
 						</div>	
 				  </div>

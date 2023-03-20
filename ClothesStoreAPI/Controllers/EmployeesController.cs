@@ -6,11 +6,11 @@ namespace ClothesStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeeController : Controller
+    public class EmployeesController : Controller
     {
         private IEmployeeRepository repository;
 
-        public EmployeeController(IEmployeeRepository repo)
+        public EmployeesController(IEmployeeRepository repo)
         {
             repository = repo;
         }
