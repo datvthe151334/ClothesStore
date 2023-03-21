@@ -1591,7 +1591,15 @@ button.w3view-cart {
 }
 .men-thumb-item img {
     transition: all 0.5s ease-out 0s;
-    padding: 52px 50px 20px;
+    padding: 52px 42px 20px;
+}
+.men-thumb-item2 img {
+	transition: all 0.5s ease-out 0s;
+	padding: 52px 35px 20px;
+}
+.men-thumb-item1 img {
+	transition: all 0.5s ease-out 0s;
+	padding: 52px 15px 20px;
 }
 .men-thumb-item:hover .men-cart-pro {
     opacity: 1;
@@ -2719,7 +2727,7 @@ h2.typoh2{
   float: left;
 }
 .rslides img {
-  height: auto;
+  height: 440px;
   border: 0;
   }
 .callbacks_tabs {

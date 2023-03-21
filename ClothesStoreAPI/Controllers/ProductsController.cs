@@ -1,4 +1,5 @@
 ﻿using BusinessObject.DTO;
+using BusinessObject.Models;
 using Microsoft.AspNetCore.Mvc;
 using Repository;
 
@@ -22,6 +23,25 @@ namespace ClothesStoreAPI.Controllers
             try
             {
                 return StatusCode(200, await repository.GetProducts());
+            }
+            catch (ApplicationException ae)
+            {
+                return StatusCode(400, ae.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        //GET: api/Products/text
+        [HttpGet("FilterProduct")] 
+        public async Task<IActionResult> GetProducts(int? categoryId , string? text)
+        {
+            try
+            {
+                
+                return StatusCode(200, await repository.GetProducts(categoryId, text));
             }
             catch (ApplicationException ae)
             {

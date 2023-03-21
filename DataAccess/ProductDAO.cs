@@ -27,6 +27,56 @@ namespace DataAccess
             return listProducts;
         }
 
+        public static async Task<List<Product>> GetProducts(int? categoryId, string? text)
+        {
+            var listProducts = new List<Product>();
+/*            if (string.IsNullOrEmpty(text))
+            {
+                throw new ApplicationException("Search keyword is empty!!");
+            }*/
+            try
+            {
+                using (var context = new ClothesStoreDBContext())
+                {
+                    listProducts = await context.Products.Include(x => x.Category).ToListAsync();
+
+                    if (categoryId != null)
+                        listProducts =  listProducts.Where(x => x.CategoryId == categoryId).ToList();
+                    if(text != null) 
+                        listProducts = listProducts.Where(x => x.ProductName.ToLower().Contains(text.ToLower().Trim())).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return listProducts;
+        }
+
+/*        public static async Task<List<Product>> GetProductsTop3Best(String text)
+        {
+            var listProducts = new List<Product>();
+            if (string.IsNullOrEmpty(text))
+            {
+                throw new ApplicationException("Search keyword is empty!!");
+            }
+            try
+            {
+                using (var context = new ClothesStoreDBContext())
+                {
+                    listProducts = await context.Products.Include(x => x.Category).Where(x => x.ProductName
+                    .ToLower().Contains(text.ToLower())).ToListAsync();
+                }
+                foreach (var product in listProducts)
+                    
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return listProducts;
+        }*/
+
         public static async Task<List<Product>> GetProductsByCategory(int catId)
         {
             var listProducts = new List<Product>();
