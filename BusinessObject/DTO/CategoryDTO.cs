@@ -13,5 +13,13 @@ namespace BusinessObject.DTO
         public string? Description { get; set; }
         public bool IsActive { get; set; }
         public string? CategoryGeneral { get; set; }
+
+        public string? CategoryDetails
+        {
+            get
+            {
+                return CategoryName + " - " + CategoryGeneral;
+            }
+        }
     }
 }

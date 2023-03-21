@@ -37,19 +37,19 @@ namespace ClothesStore.Controllers
             };
 
             List<CategoryDTO>? listCategories = JsonSerializer.Deserialize<List<CategoryDTO>>(strCategories, options);
-            int TotalCategory = listCategories.Count;
+            int Total = listCategories.Count;
 
             //Lay thong tin cho Pager
-            int TotalPage = TotalCategory / PageSize;
-            if (TotalCategory % PageSize != 0) TotalPage++;
+            int TotalPage = Total / PageSize;
+            if (Total % PageSize != 0) TotalPage++;
             ViewData["TotalPage"] = TotalPage;
             ViewData["PageNum"] = PageNum;
-            ViewData["TotalCate"] = listCategories.Count;
+            ViewData["Total"] = listCategories.Count;
             ViewData["StartIndex"] = (PageNum - 1) * PageSize + 1;
 
             listCategories = listCategories.Skip((int)(((PageNum - 1) * PageSize + 1) - 1)).Take(PageSize).ToList();
 
-            ViewData["TotalCateOnPage"] = listCategories.Count;
+            ViewData["TotalOnPage"] = listCategories.Count;
             ViewBag.listCategories = listCategories;
 
 

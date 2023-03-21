@@ -16,7 +16,9 @@
                                     @ViewData["Message"]
                                 </div>
                             }
-                            <form asp-action="create" class="com-mail">
+                            <form asp-action="edit" class="com-mail">
+                                <label>Id</label>
+                                <input asp-for="@Model.ProductId" type="text" readonly>
                                 <label>Product Name</label>
                                 <input asp-for="@Model.ProductName" type="text">
                                 <div class="form-group">

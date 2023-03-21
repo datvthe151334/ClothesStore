@@ -1,8 +1,11 @@
-﻿<div class="chit-chat-layer1">
+﻿@using BusinessObject.DTO
+@model List<ProductDTO>
+
+<div class="chit-chat-layer1">
 	<div class="col-md-12">
 			   <div class="work-progres">
 							<div class="chit-chat-heading">
-								  Recent Followers
+								  Product Management
 								  <div class="btn-group m-r-sm mail-hidden-options" style="display: inline-block;">
 									<div class="btn-group">
 										<a class="btn btn-default" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-folder"></i> <span class="caret"></span></a>
@@ -14,7 +17,7 @@
 											<li><a href="#">Export File PDF</a></li>
 											<li><a href="#">Import File PDF</a></li>
 											<li class="divider"></li>
-											<li><a href="#">New</a></li>
+											<li><a asp-controller="adminproduct" asp-action="create">New</a></li>
 										</ul>
 									</div>
 
@@ -25,22 +28,36 @@
 								  <thead>
 									<tr>
 									  <th>#</th>
-									  <th>Project</th>
-									  <th>Manager</th>                                   
-
-									  <th>Status</th>
-									  <th>Progress</th>
+									  <th>Picture</th>
+									  <th>Product Name</th>
+									  <th>Category General</th>
+									  <th>Category</th> 
+									  <th>Description</th>
+									  <th>Unit Price</th>
+									  <th>Units In Stock</th>
+									  <th>Active</th>
 									  <th></th>
 								  </tr>
 							  </thead>
 							  <tbody>
-								<tr>
-								  <td>1</td>
-								  <td>Face book</td>
-								  <td>Malorum</td>                                 
-
-								  <td><span class="label label-danger">in progress</span></td>
-								  <td><span class="badge badge-info">50%</span></td>
+							  @{int index = (int)@ViewData["StartIndex"];}
+							  @foreach (var item in Model)
+							  {
+							<tr>
+								  <td>@index</td> @{index++;}
+								  <td><img style="width:80px;height:100px" src="~/@Html.DisplayFor(modelItem => item.Picture)" /></td>
+								  <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
+								  <td>@Html.DisplayFor(modelItem => item.CategoryGeneral)</td>
+								  <td>@Html.DisplayFor(modelItem => item.CategoryName)</td>
+								  <td>@Html.DisplayFor(modelItem => item.QuantityPerUnit)</td>
+								  <td>@Html.DisplayFor(modelItem => item.UnitPrice)</td>
+								  <td>@Html.DisplayFor(modelItem => item.UnitsInStock)</td>
+								  @if(item.IsActive == true){
+									<td><span class="label label-info">active</span></td>
+								  } else
+								  {
+									<td><span class="label label-danger">inactive</span></td>
+								  }
 								  <td>
 								   <div class="dropdown dropdown-inbox">
 							<a href="#" title="" class="btn btn-default" data-toggle="dropdown" aria-expanded="false">
@@ -49,7 +66,7 @@
 							<div class="ripple-wrapper"></div></a>
 							<ul class="dropdown-menu float-right">
 								<li>
-									<a href="#" title="">
+									<a asp-controller="adminproduct" asp-action="edit" asp-route-id="@item.ProductId" title="">
 										<i class="fa fa-pencil-square-o icon_9"> </i>
 										Edit
 									</a>
@@ -68,7 +85,7 @@
 								</li>
 								<li class="divider"></li>
 								<li>
-									<a href="#" class="font-red" title="">
+									<a asp-controller="adminproduct" asp-action="delete" asp-route-id="@item.ProductId" class="font-red" title="">
 										<i class="fa fa-times" icon_9=""> </i>
 										Delete
 									</a>
@@ -77,232 +94,26 @@
 						</div>
 						</td>
 							  </tr>
-							  <tr>
-								  <td>2</td>
-								  <td>Twitter</td>
-								  <td>Evan</td>                               
-
-								  <td><span class="label label-success">completed</span></td>
-								  <td><span class="badge badge-success">100%</span></td>
-								  <td>
-								   <div class="dropdown dropdown-inbox">
-							<a href="#" title="" class="btn btn-default" data-toggle="dropdown" aria-expanded="false">
-								<i class="fa fa-cog icon_8"></i>
-								<i class="fa fa-chevron-down icon_8"></i>
-							<div class="ripple-wrapper"></div></a>
-							<ul class="dropdown-menu float-right">
-								<li>
-									<a href="#" title="">
-										<i class="fa fa-pencil-square-o icon_9"> </i>
-										Edit
-									</a>
-								</li>
-								<li>
-									<a href="#" title="">
-										<i class="fa fa-calendar icon_9"> </i>
-										Schedule
-									</a>
-								</li>
-								<li>
-									<a href="#" title="">
-										<i class="fa fa-download icon_9"> </i>
-										Download
-									</a>
-								</li>
-								<li class="divider"></li>
-								<li>
-									<a href="#" class="font-red" title="">
-										<i class="fa fa-times" icon_9=""> </i>
-										Delete
-									</a>
-								</li>
-							</ul>
-						</div>
-						</td>
-							  </tr>
-							  <tr>
-								  <td>3</td>
-								  <td>Google</td>
-								  <td>John</td>                                
-
-								  <td><span class="label label-warning">in progress</span></td>
-								  <td><span class="badge badge-warning">75%</span></td>
-								  <td>
-								   <div class="dropdown dropdown-inbox">
-							<a href="#" title="" class="btn btn-default" data-toggle="dropdown" aria-expanded="false">
-								<i class="fa fa-cog icon_8"></i>
-								<i class="fa fa-chevron-down icon_8"></i>
-							<div class="ripple-wrapper"></div></a>
-							<ul class="dropdown-menu float-right">
-								<li>
-									<a href="#" title="">
-										<i class="fa fa-pencil-square-o icon_9"> </i>
-										Edit
-									</a>
-								</li>
-								<li>
-									<a href="#" title="">
-										<i class="fa fa-calendar icon_9"> </i>
-										Schedule
-									</a>
-								</li>
-								<li>
-									<a href="#" title="">
-										<i class="fa fa-download icon_9"> </i>
-										Download
-									</a>
-								</li>
-								<li class="divider"></li>
-								<li>
-									<a href="#" class="font-red" title="">
-										<i class="fa fa-times" icon_9=""> </i>
-										Delete
-									</a>
-								</li>
-							</ul>
-						</div>
-						</td>
-							  </tr>
-							  <tr>
-								  <td>4</td>
-								  <td>LinkedIn</td>
-								  <td>Danial</td>                                 
-
-								  <td><span class="label label-info">in progress</span></td>
-								  <td><span class="badge badge-info">65%</span></td>
-								  <td>
-								   <div class="dropdown dropdown-inbox">
-							<a href="#" title="" class="btn btn-default" data-toggle="dropdown" aria-expanded="false">
-								<i class="fa fa-cog icon_8"></i>
-								<i class="fa fa-chevron-down icon_8"></i>
-							<div class="ripple-wrapper"></div></a>
-							<ul class="dropdown-menu float-right">
-								<li>
-									<a href="#" title="">
-										<i class="fa fa-pencil-square-o icon_9"> </i>
-										Edit
-									</a>
-								</li>
-								<li>
-									<a href="#" title="">
-										<i class="fa fa-calendar icon_9"> </i>
-										Schedule
-									</a>
-								</li>
-								<li>
-									<a href="#" title="">
-										<i class="fa fa-download icon_9"> </i>
-										Download
-									</a>
-								</li>
-								<li class="divider"></li>
-								<li>
-									<a href="#" class="font-red" title="">
-										<i class="fa fa-times" icon_9=""> </i>
-										Delete
-									</a>
-								</li>
-							</ul>
-						</div>
-						</td>
-							  </tr>
-							  <tr>
-								  <td>5</td>
-								  <td>Tumblr</td>
-								  <td>David</td>                                
-
-								  <td><span class="label label-warning">in progress</span></td>
-								  <td><span class="badge badge-danger">95%</span></td>
-								  <td>
-								   <div class="dropdown dropdown-inbox">
-							<a href="#" title="" class="btn btn-default" data-toggle="dropdown" aria-expanded="false">
-								<i class="fa fa-cog icon_8"></i>
-								<i class="fa fa-chevron-down icon_8"></i>
-							<div class="ripple-wrapper"></div></a>
-							<ul class="dropdown-menu float-right">
-								<li>
-									<a href="#" title="">
-										<i class="fa fa-pencil-square-o icon_9"> </i>
-										Edit
-									</a>
-								</li>
-								<li>
-									<a href="#" title="">
-										<i class="fa fa-calendar icon_9"> </i>
-										Schedule
-									</a>
-								</li>
-								<li>
-									<a href="#" title="">
-										<i class="fa fa-download icon_9"> </i>
-										Download
-									</a>
-								</li>
-								<li class="divider"></li>
-								<li>
-									<a href="#" class="font-red" title="">
-										<i class="fa fa-times" icon_9=""> </i>
-										Delete
-									</a>
-								</li>
-							</ul>
-						</div>
-						</td>
-							  </tr>
-							  <tr>
-								  <td>6</td>
-								  <td>Tesla</td>
-								  <td>Mickey</td>                                  
-
-								  <td><span class="label label-info">in progress</span></td>
-								  <td><span class="badge badge-success">95%</span></td>
-								  <td>
-								   <div class="dropdown dropdown-inbox">
-							<a href="#" title="" class="btn btn-default" data-toggle="dropdown" aria-expanded="false">
-								<i class="fa fa-cog icon_8"></i>
-								<i class="fa fa-chevron-down icon_8"></i>
-							<div class="ripple-wrapper"></div></a>
-							<ul class="dropdown-menu float-right">
-								<li>
-									<a href="#" title="">
-										<i class="fa fa-pencil-square-o icon_9"> </i>
-										Edit
-									</a>
-								</li>
-								<li>
-									<a href="#" title="">
-										<i class="fa fa-calendar icon_9"> </i>
-										Schedule
-									</a>
-								</li>
-								<li>
-									<a href="#" title="">
-										<i class="fa fa-download icon_9"> </i>
-										Download
-									</a>
-								</li>
-								<li class="divider"></li>
-								<li>
-									<a href="#" class="font-red" title="">
-										<i class="fa fa-times" icon_9=""> </i>
-										Delete
-									</a>
-								</li>
-							</ul>
-						</div>
-						</td>
-							  </tr>
+							  }
 						  </tbody>
 					  </table>
-					   <span class="text-muted m-r-sm">Showing 20 of 346 </span>
+					   <span class="text-muted m-r-sm">Showing @ViewData["TotalOnPage"] of @ViewData["Total"] </span>
 					   <div class="btn-group-page" style="align-items">
-									<a class="btn btn-default"><i class="fa fa-angle-left"></i></a>
-									<a class="btn btn-default">1</a>
-									<a class="btn btn-default">2</a>
-									<a class="btn btn-default">3</a>
-									<a class="btn btn-default">4</a>
-									<a class="btn btn-default">5</a>
-									<a class="btn btn-default"><i class="fa fa-angle-right"></i></a>
+									@if ((int)(ViewData["PageNum"]) > 1)
+									{
+										<a asp-controller="adminproduct" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]-1) class="btn btn-default"><i class="fa fa-angle-left"></i></a>
+									}
+									@for (var i = 1; i <= (int)(@ViewData["TotalPage"]); i++)
+									{
+										if ((i - (int)@ViewData["PageNum"]) <= 2 && (i - (int)@ViewData["PageNum"]) >= -2)
+										{
+											<a class="btn btn-default" asp-controller="adminproduct" asp-action="index" asp-route-PageNum=@i style=@((int)(ViewData["PageNum"])==@i ? "background-color: #5BC0DE" : "")>@i</a>
+										}
+									}
+									@if ((int)ViewData["PageNum"] < (int)ViewData["TotalPage"])
+									{
+										<a asp-controller="adminproduct" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]+1) class="btn btn-default"><i class="fa fa-angle-right"></i></a>
+									}
 						</div>	
 				  </div>
 			 </div>
