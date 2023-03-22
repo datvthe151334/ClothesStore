@@ -42,6 +42,16 @@ namespace ClothesStoreAPI.Helpers
                     dest => dest.EmployeeName,
                     opt => opt.MapFrom(src => src.Employee!.LastName));
             CreateMap<AccountDTO, Account>();
+
+            //Order Mapper
+            CreateMap<Order, OrderDTO>()
+                .ForMember(
+                    dest => dest.CustomerName,
+                    opt => opt.MapFrom(src => src.Customer!.ContactName))
+                .ForMember(
+                    dest => dest.EmployeeName,
+                    opt => opt.MapFrom(src => src.Employee!.LastName));
+            CreateMap<OrderDTO, Order>();
         }
     }
 }
