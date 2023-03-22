@@ -2,115 +2,114 @@
 @model List<OrderDTO>
 
 <div class="chit-chat-layer1">
-	<div class="col-md-12">
-			   <div class="work-progres">
-							<div class="chit-chat-heading">
-								  Order Management
-								  <div class="btn-group m-r-sm mail-hidden-options" style="display: inline-block;">
-									<div class="btn-group">
-										<a class="btn btn-default" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-folder"></i> <span class="caret"></span></a>
-										<ul class="dropdown-menu dropdown-menu-right" role="menu">
-											<li><a href="#">Export File Excel</a></li>
-											<li><a href="#">Import FileExcel</a></li>
-											<li><a href="#">Updates</a></li>
-											<li class="divider"></li>
-											<li><a href="#">Export File PDF</a></li>
-											<li><a href="#">Import File PDF</a></li>
-											<li class="divider"></li>
-											<li><a asp-controller="adminorder" asp-action="create">New</a></li>
-										</ul>
-									</div>
-
-								</div>
-							</div>
-							<div class="table-responsive">
-								<table class="table table-hover">
-								  <thead>
-									<tr>
-									  <th>#ID</th>
-									  <th>Customer</th>                                   
-									  <th>Employee</th>
-									  <th>Order Date</th>
-									  <th>Freight</th>
-									  <th>Ship Name</th>
-									  <th></th>
-								  </tr>
-							  </thead>
-							  <tbody>
-							  @foreach (var item in Model)
-							  {
-							<tr>
-								  <td><a>#@item.OrderId</a></td>
-								  <td>@Html.DisplayFor(modelItem => item.CustomerName)</td>
-								  <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
-								  <td>
-									  @if (item.OrderDate.HasValue)
-									  {
-										@item.OrderDate.Value.ToString("MM/dd/yyyy")
-									  }
-								  </td>
-								  <td>@Html.DisplayFor(modelItem => item.Freight)</td>
-								  <td>@Html.DisplayFor(modelItem => item.ShipName)</td>
-								  <td>
-								  <div class="dropdown dropdown-inbox">
-							<a href="#" title="" class="btn btn-default" data-toggle="dropdown" aria-expanded="false">
-								<i class="fa fa-cog icon_8"></i>
-								<i class="fa fa-chevron-down icon_8"></i>
-							<div class="ripple-wrapper"></div></a>
-							<ul class="dropdown-menu float-right">
-								@*<li>
-									<a asp-controller="adminaccount" asp-action="edit" asp-route-id="@item.AccountId" title="">
-										<i class="fa fa-pencil-square-o icon_9"> </i>
-										Edit
-									</a>
-								</li>
-								<li>
-									<a href="#" title="">
-										<i class="fa fa-calendar icon_9"> </i>
-										Schedule
-									</a>
-								</li>
-								<li>
-									<a href="#" title="">
-										<i class="fa fa-download icon_9"> </i>
-										Download
-									</a>
-								</li>
-								<li class="divider"></li>*@
-								<li>
-									<a asp-controller="adminorder" asp-action="delete" asp-route-id="@item.OrderId" class="font-red" title="">
-										<i class="fa fa-times" icon_9=""> </i>
-										Delete
-									</a>
-								</li>
-							</ul>
-						</div>
-						</td>
-							  </tr>
-							  }
-						  </tbody>
-					  </table>
-					   <span class="text-muted m-r-sm">Showing @ViewData["TotalOnPage"] of @ViewData["Total"] </span>
-					   <div class="btn-group-page" style="align-items">
-									@if ((int)(ViewData["PageNum"]) > 1)
-									{
-										<a asp-controller="adminorder" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]-1) class="btn btn-default"><i class="fa fa-angle-left"></i></a>
-									}
-									@for (var i = 1; i <= (int)(@ViewData["TotalPage"]); i++)
-									{
-										if ((i - (int)@ViewData["PageNum"]) <= 2 && (i - (int)@ViewData["PageNum"]) >= -2)
-										{
-											<a class="btn btn-default" asp-controller="adminorder" asp-action="index" asp-route-PageNum=@i style=@((int)(ViewData["PageNum"])==@i ? "background-color: #5BC0DE" : "")>@i</a>
-										}
-									}
-									@if ((int)ViewData["PageNum"] < (int)ViewData["TotalPage"])
-									{
-										<a asp-controller="adminorder" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]+1) class="btn btn-default"><i class="fa fa-angle-right"></i></a>
-									}
-						</div>	
-				  </div>
-			 </div>
-	  </div>
-
-	 <div class="clearfix"> </div>
+    <div class="col-md-12">
+        <div class="work-progres">
+            <div class="chit-chat-heading">
+                Order Management
+                <div class="btn-group m-r-sm mail-hidden-options" style="display: inline-block;">
+                    <div class="btn-group">
+                        <a class="btn btn-default" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-folder"></i> <span class="caret"></span></a>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li><a href="#">Export File Excel</a></li>
+                            <li><a href="#">Import FileExcel</a></li>
+                            <li><a href="#">Updates</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Export File PDF</a></li>
+                            <li><a href="#">Import File PDF</a></li>
+                            <li class="divider"></li>
+                            <li><a asp-controller="adminorder" asp-action="create">New</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#ID</th>
+                            <th>Customer</th>
+                            <th>Employee</th>
+                            <th>Order Date</th>
+                            <th>Freight</th>
+                            <th>Ship Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td><a>#@item.OrderId</a></td>
+                                <td>@Html.DisplayFor(modelItem => item.CustomerName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+                                <td>
+                                    @if (item.OrderDate.HasValue)
+                                    {
+                                        @item.OrderDate.Value.ToString("MM/dd/yyyy")
+                                    }
+                                </td>
+                                <td>@Html.DisplayFor(modelItem => item.Freight)</td>
+                                <td>@Html.DisplayFor(modelItem => item.ShipName)</td>
+                                <td>
+                                    <div class="dropdown dropdown-inbox">
+                                        <a href="#" title="" class="btn btn-default" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa fa-cog icon_8"></i>
+                                            <i class="fa fa-chevron-down icon_8"></i>
+                                            <div class="ripple-wrapper"></div>
+                                        </a>
+                                        <ul class="dropdown-menu float-right">
+                                            @*<li>
+                                                <a asp-controller="adminaccount" asp-action="edit" asp-route-id="@item.AccountId" title="">
+                                                <i class="fa fa-pencil-square-o icon_9"> </i>
+                                                Edit
+                                                </a>
+                                                </li>
+                                                <li>
+                                                <a href="#" title="">
+                                                <i class="fa fa-calendar icon_9"> </i>
+                                                Schedule
+                                                </a>
+                                                </li>
+                                                <li>
+                                                <a href="#" title="">
+                                                <i class="fa fa-download icon_9"> </i>
+                                                Download
+                                                </a>
+                                                </li>
+                                                <li class="divider"></li>*@
+                                            <li>
+                                                <a asp-controller="adminorder" asp-action="delete" asp-route-id="@item.OrderId" class="font-red" title="">
+                                                    <i class="fa fa-times" icon_9=""> </i>
+                                                    Delete
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <span class="text-muted m-r-sm">Showing @ViewData["TotalOnPage"] of @ViewData["Total"] </span>
+                <div class="btn-group-page" style="align-items">
+                    @if ((int)(ViewData["PageNum"]) > 1)
+                    {
+                        <a asp-controller="adminorder" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]-1) class="btn btn-default"><i class="fa fa-angle-left"></i></a>
+                    }
+                    @for (var i = 1; i <= (int)(@ViewData["TotalPage"]); i++)
+                    {
+                        if ((i - (int)@ViewData["PageNum"]) <= 2 && (i - (int)@ViewData["PageNum"]) >= -2)
+                        {
+                            <a class="btn btn-default" asp-controller="adminorder" asp-action="index" asp-route-PageNum=@i style=@((int)(ViewData["PageNum"])==@i ? "background-color: #5BC0DE" : "")>@i</a>
+                        }
+                    }
+                    @if ((int)ViewData["PageNum"] < (int)ViewData["TotalPage"])
+                    {
+                        <a asp-controller="adminorder" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]+1) class="btn btn-default"><i class="fa fa-angle-right"></i></a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"> </div>
 </div>
