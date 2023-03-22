@@ -10,7 +10,7 @@ namespace Repository
     public interface IProductRepository
     {
         Task<List<ProductDTO>> GetProducts();
-        Task<List<ProductDTO>> GetProducts(int? categoryId, string? text);
+        Task<List<ProductDTO>> GetProducts(int? categoryId, string? text, string? sortType);
         Task<List<ProductDTO>> GetProductsByCategory(int catId);
         Task<List<ProductDTO>> GetProductsByCategoryGeneral(string catGeneral);
         Task<ProductDTO> GetProductById(int id);

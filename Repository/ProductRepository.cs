@@ -55,9 +55,9 @@ namespace Repository
             await ProductDAO.DeleteProduct(id);
         }
 
-        public async Task<List<ProductDTO>> GetProducts(int? categoryId, string? text)
+        public async Task<List<ProductDTO>> GetProducts(int? categoryId, string? text, string? sortType)
         {
-            return _mapper.Map<List<ProductDTO>>(await ProductDAO.GetProducts(categoryId,text));
+            return _mapper.Map<List<ProductDTO>>(await ProductDAO.GetProducts(categoryId,text,sortType));
         }
     }
 }

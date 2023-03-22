@@ -57,10 +57,10 @@ namespace ClothesStore.Controllers
             return View(product);
         }
 
-        public async Task<IActionResult> Index(int? categoryId, string? text)
+        public async Task<IActionResult> Index(int? categoryId, string? text, string? sortType)
         {
             //Get Products By Name t nghị sau ni chỗ search/filterbyid chỉ cần dùng cái api ni là đc : DefaultProductApiUrl + "/FilterProduct?categoryId=" + categoryId + "&text="+ text phbair ko
-            HttpResponseMessage productsResponse = await client.GetAsync(DefaultProductApiUrl + "/FilterProduct?categoryId=" + categoryId + "&text="+ text);
+            HttpResponseMessage productsResponse = await client.GetAsync(DefaultProductApiUrl + "/FilterProduct?categoryId=" + categoryId + "&text="+ text + "&sortType=" + sortType);
             string strProduct = await productsResponse.Content.ReadAsStringAsync();
 
             //Get CategoryGeneral
@@ -82,6 +82,8 @@ namespace ClothesStore.Controllers
             ViewBag.listCategoryGeneral = listCategoryGeneral;
             ViewData["text"] = text;
             ViewData["categoryId"] = categoryId;
+            ViewData["sortType"] = sortType;
+            ViewBag.SortType = sortType;
             return View(product);
         }
     }

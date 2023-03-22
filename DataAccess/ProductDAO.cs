@@ -27,7 +27,7 @@ namespace DataAccess
             return listProducts;
         }
 
-        public static async Task<List<Product>> GetProducts(int? categoryId, string? text)
+        public static async Task<List<Product>> GetProducts(int? categoryId, string? text,string? sortType)
         {
             var listProducts = new List<Product>();
 /*            if (string.IsNullOrEmpty(text))
@@ -44,6 +44,27 @@ namespace DataAccess
                         listProducts =  listProducts.Where(x => x.CategoryId == categoryId).ToList();
                     if(text != null) 
                         listProducts = listProducts.Where(x => x.ProductName.ToLower().Contains(text.ToLower().Trim())).ToList();
+                    if (sortType != null)
+                    {
+                        switch (sortType)
+                        {
+                            case "name-asc":
+                                listProducts = listProducts.OrderBy(x => x.ProductName).ToList();
+                                break;
+                            case "name-desc":
+                                listProducts = listProducts.OrderByDescending(x => x.ProductName).ToList();
+                                break;
+                            case "price-asc":
+                                listProducts = listProducts.OrderBy(x => x.UnitPrice).ToList();
+                                break;
+                            case "price-desc":
+                                listProducts = listProducts.OrderByDescending(x => x.UnitPrice).ToList();
+                                break;
+                            default:
+                                listProducts = listProducts.OrderBy(x => x.ProductName).ToList();
+                                break;
+                        }
+                    }
                 }
             }
             catch (Exception ex)

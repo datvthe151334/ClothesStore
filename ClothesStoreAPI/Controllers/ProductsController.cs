@@ -36,12 +36,12 @@ namespace ClothesStoreAPI.Controllers
 
         //GET: api/Products/text
         [HttpGet("FilterProduct")] 
-        public async Task<IActionResult> GetProducts(int? categoryId , string? text)
+        public async Task<IActionResult> GetProducts(int? categoryId , string? text, string? sortType)
         {
             try
             {
                 
-                return StatusCode(200, await repository.GetProducts(categoryId, text));
+                return StatusCode(200, await repository.GetProducts(categoryId, text, sortType));
             }
             catch (ApplicationException ae)
             {
