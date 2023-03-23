@@ -9,7 +9,7 @@ namespace Repository
 {
     public interface ICustomerRepository
     {
-        Task<List<CustomerDTO>> GetCustomers();
+        Task<List<CustomerDTO>> GetCustomers(string? searchString);
         Task<CustomerDTO> GetCustomerById(string id);
         Task<CustomerDTO> CreateCustomer(CustomerDTO customerDTO);
         Task<CustomerDTO> UpdateCustomer(CustomerDTO customerDTO);

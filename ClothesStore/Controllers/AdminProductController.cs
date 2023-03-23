@@ -26,13 +26,13 @@ namespace ClothesStore.Controllers
             DefaultCategoryApiUrl = "https://localhost:7059/api/Categories";
         }
 
-        public async Task<IActionResult> Index(int? PageNum)
+        public async Task<IActionResult> Index(int? PageNum, string? searchString, decimal? startPrice, decimal? endPrice)
         {
             if (PageNum <= 0 || PageNum is null) PageNum = 1;
             int PageSize = Convert.ToInt32(configuration.GetValue<string>("AppSettings:PageSize"));
 
             //Get Products
-            HttpResponseMessage productsResponse = await client.GetAsync(DefaultProductApiUrl);
+            HttpResponseMessage productsResponse = await client.GetAsync(DefaultProductApiUrl + "/FilterProduct?text=" + searchString + "&startPrice=" + startPrice + "&endPrice=" + endPrice);
             string strProducts = await productsResponse.Content.ReadAsStringAsync();
 
             var options = new JsonSerializerOptions
@@ -55,6 +55,10 @@ namespace ClothesStore.Controllers
 
             ViewData["TotalOnPage"] = listProducts.Count;
             ViewBag.listProducts = listProducts;
+
+            ViewData["StartPrice"] = startPrice;
+            ViewData["EndPrice"] = endPrice;
+            ViewData["SearchString"] = searchString;
 
 
             return View(listProducts);

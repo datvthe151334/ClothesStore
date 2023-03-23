@@ -18,9 +18,9 @@ namespace Repository
             _mapper = mapper;
         }
 
-        public async Task<List<CustomerDTO>> GetCustomers()
+        public async Task<List<CustomerDTO>> GetCustomers(string? searchString)
         {
-            return _mapper.Map<List<CustomerDTO>>(await CustomerDAO.GetCustomers());
+            return _mapper.Map<List<CustomerDTO>>(await CustomerDAO.GetCustomers(searchString));
         }
 
         public async Task<CustomerDTO> GetCustomerById(string id)

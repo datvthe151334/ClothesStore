@@ -27,7 +27,7 @@ namespace DataAccess
             return listProducts;
         }
 
-        public static async Task<List<Product>> GetProducts(int? categoryId, string? text,string? sortType)
+        public static async Task<List<Product>> GetProducts(int? categoryId, string? text,string? sortType, decimal? startPrice, decimal? endPrice)
         {
             var listProducts = new List<Product>();
 /*            if (string.IsNullOrEmpty(text))
@@ -65,6 +65,10 @@ namespace DataAccess
                                 break;
                         }
                     }
+                    if(startPrice != null)
+                        listProducts = listProducts.Where(x => x.UnitPrice >= startPrice).ToList();
+                    if (endPrice != null)
+                        listProducts = listProducts.Where(x => x.UnitPrice <= endPrice).ToList();
                 }
             }
             catch (Exception ex)

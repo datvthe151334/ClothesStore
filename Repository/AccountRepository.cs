@@ -16,9 +16,9 @@ namespace Repository
         {
             _mapper = mapper;
         }
-        public async Task<List<AccountDTO>> GetAccounts()
+        public async Task<List<AccountDTO>> GetAccounts(string? searchString)
         {
-            return _mapper.Map<List<AccountDTO>>(await AccountDAO.GetAccounts());
+            return _mapper.Map<List<AccountDTO>>(await AccountDAO.GetAccounts(searchString));
         }
         public async Task<AccountDTO> GetAccountById(int id)
         {

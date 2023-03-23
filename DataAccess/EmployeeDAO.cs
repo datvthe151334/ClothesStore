@@ -10,7 +10,7 @@ namespace DataAccess
 {
     public class EmployeeDAO
     {
-        public static async Task<List<Employee>> GetEmployees()
+        public static async Task<List<Employee>> GetEmployees(string? searchString)
         {
             var listEmployees = new List<Employee>();
             try
@@ -18,6 +18,12 @@ namespace DataAccess
                 using (var context = new ClothesStoreDBContext())
                 {
                     listEmployees = await context.Employees.Include(x => x.Department).ToListAsync();
+
+                    if (searchString != null)
+                    {
+                        string txt = searchString.ToLower().Trim();
+                        listEmployees = listEmployees.Where(x => x.FirstName.ToLower().Contains(txt) || x.LastName.ToLower().Contains(txt)).ToList();
+                    }
                 }
             }
             catch (Exception ex)

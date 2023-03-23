@@ -17,11 +17,11 @@ namespace ClothesStoreAPI.Controllers
 
         //GET: api/Accounts
         [HttpGet]
-        public async Task<IActionResult> GetAccounts()
+        public async Task<IActionResult> GetAccounts(string? searchString)
         {
             try
             {
-                return StatusCode(200, await repository.GetAccounts());
+                return StatusCode(200, await repository.GetAccounts(searchString));
             }
             catch (ApplicationException ae)
             {

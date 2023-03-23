@@ -20,13 +20,13 @@ namespace ClothesStore.Controllers
             DefaultAccountApiUrl = "https://localhost:7059/api/Accounts";
         }
 
-        public async Task<IActionResult> Index(int? PageNum)
+        public async Task<IActionResult> Index(int? PageNum, string? searchString)
         {
             if (PageNum <= 0 || PageNum is null) PageNum = 1;
             int PageSize = Convert.ToInt32(configuration.GetValue<string>("AppSettings:PageSize"));
 
             //Get Accounts
-            HttpResponseMessage accountsResponse = await client.GetAsync(DefaultAccountApiUrl);
+            HttpResponseMessage accountsResponse = await client.GetAsync(DefaultAccountApiUrl + "?searchString=" + searchString);
             string strAccounts = await accountsResponse.Content.ReadAsStringAsync();
 
             var options = new JsonSerializerOptions
@@ -50,6 +50,7 @@ namespace ClothesStore.Controllers
             ViewData["TotalOnPage"] = listAccounts.Count;
             ViewBag.listAccounts = listAccounts;
 
+            ViewData["SearchString"] = searchString;
 
             return View(listAccounts);
         }

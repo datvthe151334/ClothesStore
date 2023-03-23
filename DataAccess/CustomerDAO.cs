@@ -11,7 +11,7 @@ namespace DataAccess
     public class CustomerDAO
     {
         private static Random random = new Random();
-        public static async Task<List<Customer>> GetCustomers()
+        public static async Task<List<Customer>> GetCustomers(string? searchString)
         {
             var listCustomers = new List<Customer>();
             try
@@ -19,6 +19,12 @@ namespace DataAccess
                 using (var context = new ClothesStoreDBContext())
                 {
                     listCustomers = await context.Customers.ToListAsync();
+
+                    if (searchString != null)
+                    {
+                        string txt = searchString.ToLower().Trim();
+                        listCustomers = listCustomers.Where(x => x.ContactName.ToLower().Contains(txt)).ToList();
+                    }
                 }
             }
             catch (Exception ex)

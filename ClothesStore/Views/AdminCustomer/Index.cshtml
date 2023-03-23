@@ -22,6 +22,18 @@
                     </div>
                     </div>*@
             </div>
+            <div>
+                <form asp-action="Index" method="get">
+                    <div class="form-group">
+                        <label for="searchString" class="control-label">Name: </label>
+                        <input id="searchString" name="searchString"
+                               class="form-control" value="@ViewData["SearchString"]" />
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Search" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
@@ -107,18 +119,18 @@
                 <div class="btn-group-page" style="align-items">
                     @if ((int)(ViewData["PageNum"]) > 1)
                     {
-                        <a asp-controller="admincustomer" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]-1) class="btn btn-default"><i class="fa fa-angle-left"></i></a>
+                        <a asp-controller="admincustomer" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]-1) asp-route-searchString=@ViewData["SearchString"] class="btn btn-default"><i class="fa fa-angle-left"></i></a>
                     }
                     @for (var i = 1; i <= (int)(@ViewData["TotalPage"]); i++)
                     {
                         if ((i - (int)@ViewData["PageNum"]) <= 2 && (i - (int)@ViewData["PageNum"]) >= -2)
                         {
-                            <a class="btn btn-default" asp-controller="admincustomer" asp-action="index" asp-route-PageNum=@i style=@((int)(ViewData["PageNum"])==@i ? "background-color: #5BC0DE" : "")>@i</a>
+                            <a class="btn btn-default" asp-controller="admincustomer" asp-action="index" asp-route-PageNum=@i asp-route-searchString=@ViewData["SearchString"] style=@((int)(ViewData["PageNum"])==@i ? "background-color: #5BC0DE" : "")>@i</a>
                         }
                     }
                     @if ((int)ViewData["PageNum"] < (int)ViewData["TotalPage"])
                     {
-                        <a asp-controller="admincustomer" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]+1) class="btn btn-default"><i class="fa fa-angle-right"></i></a>
+                        <a asp-controller="admincustomer" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]+1) asp-route-searchString=@ViewData["SearchString"] class="btn btn-default"><i class="fa fa-angle-right"></i></a>
                     }
                 </div>
             </div>

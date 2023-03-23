@@ -9,7 +9,7 @@ namespace Repository
 {
     public interface IAccountRepository
     {
-        Task<List<AccountDTO>> GetAccounts();
+        Task<List<AccountDTO>> GetAccounts(string? searchString);
         Task<AccountDTO> GetAccountById(int id);
         Task DeleteAccount(int id);
     }

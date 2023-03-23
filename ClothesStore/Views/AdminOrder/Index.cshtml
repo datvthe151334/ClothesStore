@@ -10,17 +10,40 @@
                     <div class="btn-group">
                         <a class="btn btn-default" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-folder"></i> <span class="caret"></span></a>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                            <li><a href="#">Export File Excel</a></li>
-                            <li><a href="#">Import FileExcel</a></li>
+                            <li><a asp-controller="adminorder" asp-action="exportExcel" asp-route-PageNum=@ViewData["PageNum"] asp-route-startDate=@ViewData["StartDate"] asp-route-endDate=@ViewData["EndDate"]>Export File Excel</a></li>
+                            @*<li><a href="#">Import FileExcel</a></li>
                             <li><a href="#">Updates</a></li>
                             <li class="divider"></li>
-                            <li><a href="#">Export File PDF</a></li>
+                            <li><a asp-controller="adminorder" asp-action="create">Export File PDF</a></li>
                             <li><a href="#">Import File PDF</a></li>
                             <li class="divider"></li>
-                            <li><a asp-controller="adminorder" asp-action="create">New</a></li>
+                            <li><a asp-controller="adminorder" asp-action="create">New</a></li>*@
                         </ul>
                     </div>
                 </div>
+            </div>
+            <div>
+                <form asp-action="Index" method="get">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="startDate" class="control-label d-inline">Start Date: </label>
+                                <input id="startDate" name="startDate"
+                                       class="form-control" type="date" step="any" value="@ViewData["StartDate"]" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="endDate" class="control-label d-inline">End Date: </label>
+                                <input id="endDate" name="endDate"
+                                       class="form-control" type="date" step="any" value="@ViewData["EndDate"]" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Search" class="btn btn-primary" />
+                    </div>
+                </form>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover">
@@ -94,18 +117,18 @@
                 <div class="btn-group-page" style="align-items">
                     @if ((int)(ViewData["PageNum"]) > 1)
                     {
-                        <a asp-controller="adminorder" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]-1) class="btn btn-default"><i class="fa fa-angle-left"></i></a>
+                        <a asp-controller="adminorder" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]-1) asp-route-startDate=@ViewData["StartDate"] asp-route-endDate=@ViewData["EndDate"] class="btn btn-default"><i class="fa fa-angle-left"></i></a>
                     }
                     @for (var i = 1; i <= (int)(@ViewData["TotalPage"]); i++)
                     {
                         if ((i - (int)@ViewData["PageNum"]) <= 2 && (i - (int)@ViewData["PageNum"]) >= -2)
                         {
-                            <a class="btn btn-default" asp-controller="adminorder" asp-action="index" asp-route-PageNum=@i style=@((int)(ViewData["PageNum"])==@i ? "background-color: #5BC0DE" : "")>@i</a>
+                            <a class="btn btn-default" asp-controller="adminorder" asp-action="index" asp-route-PageNum=@i asp-route-startDate=@ViewData["StartDate"] asp-route-endDate=@ViewData["EndDate"] style=@((int)(ViewData["PageNum"])==@i ? "background-color: #5BC0DE" : "")>@i</a>
                         }
                     }
                     @if ((int)ViewData["PageNum"] < (int)ViewData["TotalPage"])
                     {
-                        <a asp-controller="adminorder" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]+1) class="btn btn-default"><i class="fa fa-angle-right"></i></a>
+                        <a asp-controller="adminorder" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]+1) asp-route-startDate=@ViewData["StartDate"] asp-route-endDate=@ViewData["EndDate"] class="btn btn-default"><i class="fa fa-angle-right"></i></a>
                     }
                 </div>
             </div>

@@ -9,7 +9,7 @@ namespace Repository
 {
     public interface IOrderRepository
     {
-        Task<List<OrderDTO>> GetOrders();
+        Task<List<OrderDTO>> GetOrders(DateTime? startDate, DateTime? endDate);
         Task<OrderDTO> GetOrderById(int id);
         Task DeleteOrder(int id);
     }

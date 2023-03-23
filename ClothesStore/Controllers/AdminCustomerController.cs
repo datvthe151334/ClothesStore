@@ -21,13 +21,13 @@ namespace ClothesStore.Controllers
             DefaultCustomerApiUrl = "https://localhost:7059/api/Customers";
         }
 
-        public async Task<IActionResult> Index(int? PageNum)
+        public async Task<IActionResult> Index(int? PageNum, string? searchString)
         {
             if (PageNum <= 0 || PageNum is null) PageNum = 1;
             int PageSize = Convert.ToInt32(configuration.GetValue<string>("AppSettings:PageSize"));
 
             //Get Categories
-            HttpResponseMessage customersResponse = await client.GetAsync(DefaultCustomerApiUrl);
+            HttpResponseMessage customersResponse = await client.GetAsync(DefaultCustomerApiUrl + "?searchString=" + searchString);
             string strCustomers = await customersResponse.Content.ReadAsStringAsync();
 
             var options = new JsonSerializerOptions
@@ -51,6 +51,7 @@ namespace ClothesStore.Controllers
             ViewData["TotalOnPage"] = listCustomers.Count;
             ViewBag.listCustomers = listCustomers;
 
+            ViewData["SearchString"] = searchString;
 
             return View(listCustomers);
         }

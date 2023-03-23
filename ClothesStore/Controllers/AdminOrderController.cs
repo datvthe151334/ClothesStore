@@ -20,13 +20,13 @@ namespace ClothesStore.Controllers
             DefaultOrderApiUrl = "https://localhost:7059/api/Orders";
         }
 
-        public async Task<IActionResult> Index(int? PageNum)
+        public async Task<IActionResult> Index(int? PageNum, DateTime? startDate, DateTime? endDate)
         {
             if (PageNum <= 0 || PageNum is null) PageNum = 1;
             int PageSize = Convert.ToInt32(configuration.GetValue<string>("AppSettings:PageSize"));
 
             //Get Orders
-            HttpResponseMessage ordersResponse = await client.GetAsync(DefaultOrderApiUrl);
+            HttpResponseMessage ordersResponse = await client.GetAsync(DefaultOrderApiUrl + "?startDate=" + startDate + "&endDate=" + endDate);
             string strOrders = await ordersResponse.Content.ReadAsStringAsync();
 
             var options = new JsonSerializerOptions
@@ -40,6 +40,7 @@ namespace ClothesStore.Controllers
             //Lay thong tin cho Pager
             int TotalPage = Total / PageSize;
             if (Total % PageSize != 0) TotalPage++;
+
             ViewData["TotalPage"] = TotalPage;
             ViewData["PageNum"] = PageNum;
             ViewData["Total"] = listOrders.Count;
@@ -50,6 +51,8 @@ namespace ClothesStore.Controllers
             ViewData["TotalOnPage"] = listOrders.Count;
             ViewBag.listOrders = listOrders;
 
+            ViewData["StartDate"] = String.Format("{0:yyyy-MM-dd}", startDate);
+            ViewData["EndDate"] = String.Format("{0:yyyy-MM-dd}", endDate);
 
             return View(listOrders);
         }
@@ -59,6 +62,13 @@ namespace ClothesStore.Controllers
             await client.DeleteAsync(DefaultOrderApiUrl + "/" + id);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> exportExcel(int? PageNum, DateTime? startDate, DateTime? endDate)
+        {
+            await client.GetAsync(DefaultOrderApiUrl + "/exportExcel?startDate=" + startDate + "&endDate=" + endDate);
+
+            return RedirectToAction("Index", "AdminOrder" , new { @PageNum = PageNum, @startDate = startDate, @endDate = endDate });
         }
     }
 }

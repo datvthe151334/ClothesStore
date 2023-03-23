@@ -9,7 +9,7 @@ namespace Repository
 {
     public interface IEmployeeRepository
     {
-        Task<List<EmployeeDTO>> GetEmployees();
+        Task<List<EmployeeDTO>> GetEmployees(string? searchString);
         Task<EmployeeDTO> GetEmployeeById(int id);
         Task<EmployeeCreateUpdateDTO> CreateEmployee(EmployeeCreateUpdateDTO employeeDTO);
         Task<EmployeeCreateUpdateDTO> UpdateEmployee(EmployeeCreateUpdateDTO employeeDTO);

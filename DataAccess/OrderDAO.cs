@@ -10,7 +10,7 @@ namespace DataAccess
 {
     public class OrderDAO
     {
-        public static async Task<List<Order>> GetOrders()
+        public static async Task<List<Order>> GetOrders(DateTime? startDate, DateTime? endDate)
         {
             var listOrders = new List<Order>();
             try
@@ -18,6 +18,11 @@ namespace DataAccess
                 using (var context = new ClothesStoreDBContext())
                 {
                     listOrders = await context.Orders.Include(x => x.Customer).Include(x => x.Employee).ToListAsync();
+
+                    if(startDate != null)
+                        listOrders = listOrders.Where(x => x.OrderDate >= startDate.Value).ToList();
+                    if (endDate != null)
+                        listOrders = listOrders.Where(x => x.OrderDate <= endDate.Value).ToList();
                 }
             }
             catch (Exception ex)

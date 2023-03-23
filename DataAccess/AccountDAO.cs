@@ -10,15 +10,20 @@ namespace DataAccess
 {
     public class AccountDAO
     {
-        public static async Task<List<Account>> GetAccounts()
+        public static async Task<List<Account>> GetAccounts(string? searchString)
         {
             var listAccounts = new List<Account>();
             try
             {
                 using (var context = new ClothesStoreDBContext())
                 {
-                    var a = await context.Accounts.ToListAsync();
                     listAccounts = await context.Accounts.Include(x => x.Employee).Include(x => x.Customer).ToListAsync();
+
+                    if(searchString != null)
+                    {
+                        string txt = searchString.ToLower().Trim();
+                        listAccounts = listAccounts.Where(x => x.Email.ToLower().Contains(txt)).ToList();
+                    }
                 }
             }
             catch (Exception ex)

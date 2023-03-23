@@ -20,13 +20,13 @@ namespace ClothesStore.Controllers
             DefaultEmployeeApiUrl = "https://localhost:7059/api/Employees";
         }
 
-        public async Task<IActionResult> Index(int? PageNum)
+        public async Task<IActionResult> Index(int? PageNum, string? searchString)
         {
             if (PageNum <= 0 || PageNum is null) PageNum = 1;
             int PageSize = Convert.ToInt32(configuration.GetValue<string>("AppSettings:PageSize"));
 
             //Get Categories
-            HttpResponseMessage employeesResponse = await client.GetAsync(DefaultEmployeeApiUrl);
+            HttpResponseMessage employeesResponse = await client.GetAsync(DefaultEmployeeApiUrl + "?searchString=" + searchString);
             string strEmployees = await employeesResponse.Content.ReadAsStringAsync();
 
             var options = new JsonSerializerOptions
@@ -50,6 +50,7 @@ namespace ClothesStore.Controllers
             ViewData["TotalOnPage"] = listEmployees.Count;
             ViewBag.listEmployees = listEmployees;
 
+            ViewData["SearchString"] = searchString;
 
             return View(listEmployees);
         }
