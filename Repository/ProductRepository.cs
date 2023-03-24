@@ -44,6 +44,12 @@ namespace Repository
             return _mapper.Map<ProductCreateUpdateDTO>(await ProductDAO.CreateProduct(product));
         }
 
+        public async Task<bool> CreateProductMany(List<ProductCreateUpdateDTO> listProductDTO)
+        {
+            var listProducts = _mapper.Map<List<Product>>(listProductDTO);
+            return await ProductDAO.CreateProductMany(listProducts);
+        }
+
         public async Task<ProductCreateUpdateDTO> UpdateProduct(ProductCreateUpdateDTO productDTO)
         {
             var product = _mapper.Map<Product>(productDTO);

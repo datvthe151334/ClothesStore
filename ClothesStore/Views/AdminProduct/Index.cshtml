@@ -10,12 +10,13 @@
                     <div class="btn-group">
                         <a class="btn btn-default" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-folder"></i> <span class="caret"></span></a>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                            <li><a href="#">Export File Excel</a></li>
-                            <li><a href="#">Import FileExcel</a></li>
-                            <li><a href="#">Updates</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#">Export File PDF</a></li>
-                            <li><a href="#">Import File PDF</a></li>
+                            <li><a asp-controller="adminproduct" asp-action="exportExcel" asp-route-searchString=@ViewData["SearchString"] asp-route-startPrice=@ViewData["StartPrice"] asp-route-endPrice=@ViewData["EndPrice"]>Export File Excel</a></li>
+                            <li><a>
+                                <form asp-action="importExcel" enctype="multipart/form-data" method="post">
+                                    <label for="upload-file">Import File Excel</label>
+                                    <input type="file" name="file" id="upload-file" onchange="this.form.submit()" />
+                                </form>
+                            </a></li>
                             <li class="divider"></li>
                             <li><a asp-controller="adminproduct" asp-action="create">New</a></li>
                         </ul>
@@ -135,18 +136,18 @@
                 <div class="btn-group-page" style="align-items">
                     @if ((int)(ViewData["PageNum"]) > 1)
                     {
-                        <a asp-controller="adminproduct" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]-1) class="btn btn-default"><i class="fa fa-angle-left"></i></a>
+                        <a asp-controller="adminproduct" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]-1) asp-route-searchString=@ViewData["SearchString"] asp-route-startPrice=@ViewData["StartPrice"] asp-route-endPrice=@ViewData["EndPrice"] class="btn btn-default"><i class="fa fa-angle-left"></i></a>
                     }
                     @for (var i = 1; i <= (int)(@ViewData["TotalPage"]); i++)
                     {
                         if ((i - (int)@ViewData["PageNum"]) <= 2 && (i - (int)@ViewData["PageNum"]) >= -2)
                         {
-                            <a class="btn btn-default" asp-controller="adminproduct" asp-action="index" asp-route-PageNum=@i style=@((int)(ViewData["PageNum"])==@i ? "background-color: #5BC0DE" : "")>@i</a>
+                            <a class="btn btn-default" asp-controller="adminproduct" asp-action="index" asp-route-PageNum=@i asp-route-searchString=@ViewData["SearchString"] asp-route-startPrice=@ViewData["StartPrice"] asp-route-endPrice=@ViewData["EndPrice"] style=@((int)(ViewData["PageNum"])==@i ? "background-color: #5BC0DE" : "")>@i</a>
                         }
                     }
                     @if ((int)ViewData["PageNum"] < (int)ViewData["TotalPage"])
                     {
-                        <a asp-controller="adminproduct" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]+1) class="btn btn-default"><i class="fa fa-angle-right"></i></a>
+                        <a asp-controller="adminproduct" asp-action="index" asp-route-PageNum=@((int)ViewData["PageNum"]+1) asp-route-searchString=@ViewData["SearchString"] asp-route-startPrice=@ViewData["StartPrice"] asp-route-endPrice=@ViewData["EndPrice"] class="btn btn-default"><i class="fa fa-angle-right"></i></a>
                     }
                 </div>
             </div>

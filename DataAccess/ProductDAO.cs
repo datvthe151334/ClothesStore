@@ -171,6 +171,22 @@ namespace DataAccess
             }
         }
 
+        public static async Task<bool> CreateProductMany(List<Product> listProducts)
+        {
+            try
+            {
+                using (var context = new ClothesStoreDBContext())
+                {
+                    await context.Products.AddRangeAsync(listProducts);
+                    return await context.SaveChangesAsync() > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public static async Task<Product> UpdateProduct(Product product)
         {
             try

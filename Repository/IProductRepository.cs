@@ -15,6 +15,7 @@ namespace Repository
         Task<List<ProductDTO>> GetProductsByCategoryGeneral(string catGeneral);
         Task<ProductDTO> GetProductById(int id);
         Task<ProductCreateUpdateDTO> CreateProduct(ProductCreateUpdateDTO productDTO);
+        Task<bool> CreateProductMany(List<ProductCreateUpdateDTO> listProductDTO);
         Task<ProductCreateUpdateDTO> UpdateProduct(ProductCreateUpdateDTO productDTO);
         Task DeleteProduct(int id);
     }

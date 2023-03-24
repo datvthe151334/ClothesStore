@@ -15,7 +15,7 @@
                         @ViewData["Message"]
                     </div>
                 }
-                <form asp-action="edit" class="com-mail">
+                <form asp-action="edit" class="com-mail" enctype="multipart/form-data">
                     <label>Id</label>
                     <input asp-for="@Model.ProductId" type="text" readonly>
                     <label>Product Name</label>
@@ -32,8 +32,11 @@
                     <input asp-for="@Model.UnitsInStock" type="number"><br />
                     <label>Units On Order</label><br />
                     <input asp-for="@Model.ReorderLevel" type="number"><br />
-                    <label>Picture</label><br />
-                    <input asp-for="@Model.Picture" type="text"><br />
+                    <input asp-for="@Model.Picture" type="hidden"><br />
+                    <div class="form-group">
+                        <label asp-for="@Model.Picture"></label>
+                        <input name="imgFile" type="file" />
+                    </div>
                     <div class="form-group">
                         <label asp-for="@Model.Discontinued"></label>
                         <input asp-for="@Model.Discontinued" type="checkbox" />

@@ -7,17 +7,17 @@ using System.Text.Json;
 
 namespace ClothesStore.Controllers
 {
-    
     public class AdminProductController : Controller
     {
-
+        private Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnv;
         private readonly IConfiguration configuration;
         private readonly HttpClient client = null;
         private string DefaultProductApiUrl = "";
         private string DefaultCategoryApiUrl = "";
 
-        public AdminProductController(IConfiguration configuration)
+        public AdminProductController(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
+            this.hostingEnv = env;
             this.configuration = configuration;
             client = new HttpClient();
             var contentType = new MediaTypeWithQualityHeaderValue("application/json");
@@ -76,8 +76,25 @@ namespace ClothesStore.Controllers
         //POST: product/create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(ProductCreateUpdateDTO productDTO)
+        public async Task<ActionResult> Create(ProductCreateUpdateDTO productDTO, IFormFile? imgFile)
         {
+            if (imgFile != null)
+            {
+                string fileName = imgFile.FileName;
+                string fileDir = "images";
+                string filePath = Path.Combine(hostingEnv.WebRootPath, fileDir + "\\" + fileName);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                using (FileStream fs = System.IO.File.Create(filePath))
+                {
+                        imgFile.CopyTo(fs);
+                }
+                
+            }
+
+            productDTO.Picture = "images/" + imgFile.FileName;
             var stringContent = new StringContent(JsonSerializer.Serialize<ProductCreateUpdateDTO>(productDTO), Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.PostAsync(DefaultProductApiUrl, stringContent);
 
@@ -106,7 +123,6 @@ namespace ClothesStore.Controllers
             };
 
             ProductCreateUpdateDTO? productDTO = JsonSerializer.Deserialize<ProductCreateUpdateDTO>(strProduct, options);
-
             List<CategoryDTO> listCategories = await GetCategoriesAsync();
             ViewData["CategoryId"] = new SelectList(listCategories, "CategoryId", "CategoryDetails");
 
@@ -116,8 +132,10 @@ namespace ClothesStore.Controllers
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(ProductCreateUpdateDTO productDTO)
+        public async Task<ActionResult> Edit(ProductCreateUpdateDTO productDTO, IFormFile? imgFile)
         {
+            if (imgFile == null) productDTO.Picture = "" + productDTO.Picture;
+            else productDTO.Picture = "images/" + imgFile.FileName;
             var stringContent = new StringContent(JsonSerializer.Serialize<ProductCreateUpdateDTO>(productDTO), Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.PutAsync(DefaultProductApiUrl, stringContent);
 
@@ -126,6 +144,21 @@ namespace ClothesStore.Controllers
 
             if (response.IsSuccessStatusCode)
             {
+                if (imgFile != null)
+                {
+                    string fileName = imgFile.FileName;
+                    string fileDir = "images";
+                    string filePath = Path.Combine(hostingEnv.WebRootPath, fileDir + "\\" + fileName);
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                    using (FileStream fs = System.IO.File.Create(filePath))
+                    {
+                        imgFile.CopyTo(fs);
+                    }
+
+                }
                 ViewData["Message"] = "Edit successfully!";
                 return View(productDTO);
             }
@@ -138,6 +171,25 @@ namespace ClothesStore.Controllers
         {
             await client.DeleteAsync(DefaultProductApiUrl + "/" + id);
 
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> exportExcel(int? PageNum, string? searchString, decimal? startPrice, decimal? endPrice)
+        {
+            await client.GetAsync(DefaultProductApiUrl + "/exportExcel?searchString=" + searchString + "&endPrice=" + startPrice + "&endPrice=" + endPrice);
+
+            return RedirectToAction("Index", "AdminProduct", new { @PageNum = PageNum, @searchString = searchString, @startPrice = startPrice, @endPrice = endPrice });
+        }
+
+        public async Task<IActionResult> importExcel(IFormFile? file)
+        {
+            if (file == null) return RedirectToAction(nameof(Index));
+            var bytes = new byte[file.OpenReadStream().Length + 1];
+            file.OpenReadStream().Read(bytes, 0, bytes.Length);
+            var multiPartFromDataContent = new MultipartFormDataContent();
+            var fileContent = new ByteArrayContent(bytes);
+            multiPartFromDataContent.Add(fileContent, "file", file.FileName);
+            var Response = await client.PostAsync(DefaultProductApiUrl + "/importExcel", multiPartFromDataContent);
             return RedirectToAction(nameof(Index));
         }
 
