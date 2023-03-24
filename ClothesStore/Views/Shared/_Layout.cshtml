@@ -274,7 +274,7 @@ input[type="file"]{
 		</div>
 <!-- //Modal2 -->
 <!-- Modal3 -->
-		<div class="modal fade" id="myModal3" tabindex="-1" role="dialog">
+		<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" >
 			<div class="modal-dialog">
 				<!-- Modal content-->
 				<div class="modal-content">
@@ -284,13 +284,16 @@ input[type="file"]{
 						<div class="modal-body modal-body-sub_agile">
 						<div class="col-md-8 modal_body_left modal_body_left1">
 						<h3 class="agileinfo_sign">Forgot <span>Password</span></h3>
-						 <form action="#" method="post">
+						 <form action="Home/ResetPassword" method="post">
 							<div class="styled-input">
 								<input type="email" name="Email" required=""> 
 								<label>Enter your email...</label>
 								<span></span>
 							</div> 
 							<input type="submit" value="Receive Password">
+							@*<br />
+							<br />
+							<div>@ViewData["ResetMessage"]</div>*@
 						</form>
 						<div class="clearfix"></div>
 						</div>

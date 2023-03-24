@@ -63,6 +63,20 @@ namespace ClothesStore.Controllers
 
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(string? email)
+        {
+            var stringContent = new StringContent(System.Text.Json.JsonSerializer.Serialize<string>(email), Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PostAsync(DefaultAccountsApiUrl + "/ResetPassword?email=" + email, stringContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index", "Home", new { @resetMessage = "Send mail successfully!" });
+            }
+            return RedirectToAction("Index", "Home", new { @resetMessage = "Send mail fail, Re-enter your email!" });
+        }
+
         [HttpPost]
         public IActionResult SignIn(String email,String password)
         {            
@@ -109,7 +123,7 @@ namespace ClothesStore.Controllers
         }
 
         
-        public async Task<IActionResult> Index([FromQuery] string? CategoryGeneral, string? loginMessage)
+        public async Task<IActionResult> Index([FromQuery] string? CategoryGeneral, string? loginMessage, string? resetMessage)
         {
             if (CategoryGeneral == null) CategoryGeneral = "men";
             //Get Products
@@ -161,6 +175,7 @@ namespace ClothesStore.Controllers
             ViewData["CurCatGeneral"] = CategoryGeneral;
             /* ViewData["TotalCustomer"] = listCustomers.Count;*/
             ViewData["login"] = loginMessage;
+            ViewData["ResetMessage"] = resetMessage;
             return View(listProducts.OrderByDescending(x => x.ProductId).Take(12).ToList());
         }
 
