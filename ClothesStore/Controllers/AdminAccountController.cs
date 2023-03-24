@@ -1,4 +1,5 @@
 ﻿using BusinessObject.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -19,7 +20,7 @@ namespace ClothesStore.Controllers
             client.DefaultRequestHeaders.Accept.Add(contentType);
             DefaultAccountApiUrl = "https://localhost:7059/api/Accounts";
         }
-
+        
         public async Task<IActionResult> Index(int? PageNum, string? searchString)
         {
             if (PageNum <= 0 || PageNum is null) PageNum = 1;

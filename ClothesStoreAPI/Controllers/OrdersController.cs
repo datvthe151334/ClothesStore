@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using Microsoft.AspNetCore.Authorization;
+using ClosedXML.Excel;
 using ClothesStoreAPI.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,7 @@ namespace ClothesStoreAPI.Controllersorder
         }
 
         //GET: api/Orders
+
         [HttpGet]
         public async Task<IActionResult> GetOrders(DateTime? startDate, DateTime? endDate)
         {
@@ -54,6 +56,7 @@ namespace ClothesStoreAPI.Controllersorder
         }
 
         //DELETE
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {

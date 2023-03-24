@@ -1,5 +1,6 @@
 ﻿using BusinessObject.DTO;
 using BusinessObject.Models;
+using Microsoft.AspNetCore.Authorization;
 using ClosedXML.Excel;
 using ClothesStoreAPI.Configuration;
 using Microsoft.AspNetCore.Mvc;
@@ -111,6 +112,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //POST
+
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] ProductCreateUpdateDTO productDTO)
         {
@@ -129,6 +131,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //PUT
+
         [HttpPut]
         public async Task<IActionResult> UpdateProduct([FromBody] ProductCreateUpdateDTO productDTO)
         {
@@ -147,6 +150,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //DELETE
+ 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {

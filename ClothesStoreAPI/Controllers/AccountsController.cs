@@ -1,6 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper.Execution;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Repository;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using BusinessObject.DTO;
+using Microsoft.Extensions.Configuration;
+using ClothesStoreAPI.Config;
+using BusinessObject.Models;
 
 namespace ClothesStoreAPI.Controllers
 {
@@ -8,14 +17,39 @@ namespace ClothesStoreAPI.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
+        private readonly IConfiguration configuration;
         private IAccountRepository repository;
-
-        public AccountsController(IAccountRepository repo)
+        public static AccountInfoTokenDTO user = new();
+        public AccountsController(IAccountRepository repo, IConfiguration configuration)
         {
+            this.configuration = configuration;
             repository = repo;
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("signin")]
+        public async Task<ActionResult<string>> Login(LoginDTO request)
+        {
+            if (request is null) return BadRequest();
+            var account = await repository.Account(request);
+            user.Account = account;
+            if (user.Account.CustomerId != null)
+            {
+                user.Name = account.Customer.ContactName.ToString();
+            }
+            else
+            {
+                user.Name = account.Employee.FirstName.ToString() + " " + account.Employee.LastName.ToString();
+            }
+
+            user.AccessToken = JWTConfig.CreateToken(user, configuration);
+            SetRefreshToken(JWTConfig.GenerateRefreshToken());
+            return account is null ? NotFound() : Ok(user);
+        }
+
         //GET: api/Accounts
+        
         [HttpGet]
         public async Task<IActionResult> GetAccounts(string? searchString)
         {
@@ -34,6 +68,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //GET: api/Accounts/id
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAccountById(int id)
         {
@@ -51,7 +86,27 @@ namespace ClothesStoreAPI.Controllers
             }
         }
 
+        //GET: api/Accounts/email
+        [AllowAnonymous]
+        [HttpPost("FindByEmail")]
+        public async Task<IActionResult> GetAccountByEmail(string email)
+        {
+            try
+            {
+                return StatusCode(200, await repository.GetAccountByEmail(email));
+            }
+            catch (ApplicationException ae)
+            {
+                return StatusCode(400, ae.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         //DELETE
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAccount(int id)
         {
@@ -68,6 +123,14 @@ namespace ClothesStoreAPI.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        private void SetRefreshToken(RefreshToken newRefreshToken)
+        {
+            user.RefreshToken = newRefreshToken.Token;
+            user.TokenCreated = newRefreshToken.Created;
+            user.TokenExpires = newRefreshToken.Expires;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BusinessObject.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repository;
 
@@ -16,6 +17,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //GET: api/Customers
+
         [HttpGet]
         public async Task<IActionResult> GetCustomers(string? searchString)
         {
@@ -34,6 +36,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //GET: api/Customers/id
+ 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCustomerById(string id)
         {
@@ -52,6 +55,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //POST
+
         [HttpPost]
         public async Task<IActionResult> CreateCustomer([FromBody] CustomerDTO customerDTO)
         {
@@ -70,6 +74,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //PUT
+
         [HttpPut]
         public async Task<IActionResult> UpdateCustomer([FromBody] CustomerDTO customerDTO)
         {
@@ -88,6 +93,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //DELETE
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(string id)
         {

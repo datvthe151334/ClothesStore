@@ -1,4 +1,5 @@
-﻿using BusinessObject.Models;
+﻿using BusinessObject.DTO;
+using BusinessObject.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,15 @@ namespace DataAccess
 {
     public class AccountDAO
     {
+        public static async Task<Account> GetAccount(LoginDTO req)
+        {
+            Account? account;
+            using (var context = new ClothesStoreDBContext())
+            {
+                account = await context.Accounts.Include(c => c.Customer).Include(c => c.Employee).Where(a => a.Email!.Equals(req.Email) && a.Password!.Equals(req.Password)).FirstOrDefaultAsync(); 
+            }
+            return account ?? new();
+        }
         public static async Task<List<Account>> GetAccounts(string? searchString)
         {
             var listAccounts = new List<Account>();
@@ -41,6 +51,23 @@ namespace DataAccess
                 using (var context = new ClothesStoreDBContext())
                 {
                     account = await context.Accounts.Include(x => x.Employee).Include(x => x.Customer).SingleOrDefaultAsync(x => x.AccountId == id);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return account;
+        }
+
+        public static async Task<Account> GetAccountByEmail(string email)
+        {
+            Account? account = new Account();
+            try
+            {
+                using (var context = new ClothesStoreDBContext())
+                {
+                    account = await context.Accounts.Include(x => x.Employee).Include(x => x.Customer).SingleOrDefaultAsync(x => x.Email.Equals(email));
                 }
             }
             catch (Exception ex)

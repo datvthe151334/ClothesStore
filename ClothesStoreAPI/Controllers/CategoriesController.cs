@@ -1,4 +1,5 @@
 ﻿using BusinessObject.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repository;
 
@@ -16,6 +17,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //GET: api/Categories
+        
         [HttpGet]
         public async Task<IActionResult> GetCategories()
         {
@@ -70,6 +72,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //POST
+
         [HttpPost]
         public async Task<IActionResult> CreateCategory([FromBody] CategoryDTO categoryDTO)
         {
@@ -88,6 +91,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //PUT
+
         [HttpPut]
         public async Task<IActionResult> UpdateCategory([FromBody] CategoryDTO categoryDTO)
         {
@@ -106,6 +110,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //DELETE
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
