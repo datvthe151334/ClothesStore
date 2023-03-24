@@ -15,5 +15,6 @@ namespace Repository
         Task<AccountDTO> GetAccountByEmail(string email);
         Task<Account> Account(LoginDTO req);
         Task DeleteAccount(int id);
+        Task<string?> GetResetPassword(string? email);
     }
 }

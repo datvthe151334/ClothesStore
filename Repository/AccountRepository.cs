@@ -36,5 +36,10 @@ namespace Repository
         {
             await AccountDAO.DeleteAccount(id);
         }
+
+        public async Task<string?> GetResetPassword(string? email)
+        {
+            return await AccountDAO.GetResetPassword(email);
+        }
     }
 }

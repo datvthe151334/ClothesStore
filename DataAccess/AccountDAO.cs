@@ -1,5 +1,6 @@
 ﻿using BusinessObject.DTO;
 using BusinessObject.Models;
+using DataAccess.Utils;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -99,6 +100,32 @@ namespace DataAccess
                         context.Entry<Account>(account).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                         await context.SaveChangesAsync();
                     }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public static async Task<string?> GetResetPassword(string? email)
+        {
+            try
+            {
+                using (var context = new ClothesStoreDBContext())
+                {
+                    Account? account = new Account();
+                    account = await context.Accounts.Include(x => x.Customer).Include(x => x.Employee).SingleOrDefaultAsync(x => x.Email == email);
+                    if (account != null)
+                    {
+                        string newPassword = RandomUtils.GenerateNewPassword(8);
+                        account.Password = newPassword;
+                        context.Entry<Account>(account).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                        await context.SaveChangesAsync();
+
+                        return newPassword;
+                    }
+                    return null;
                 }
             }
             catch (Exception ex)

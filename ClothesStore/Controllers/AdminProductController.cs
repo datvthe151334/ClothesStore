@@ -93,10 +93,12 @@ namespace ClothesStore.Controllers
                 {
                         imgFile.CopyTo(fs);
                 }
-                
+                productDTO.Picture = "images/" + imgFile.FileName;
+            } else
+            {
+                productDTO.Picture = "images/default.png";
             }
 
-            productDTO.Picture = "images/" + imgFile.FileName;
             var stringContent = new StringContent(JsonSerializer.Serialize<ProductCreateUpdateDTO>(productDTO), Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.PostAsync(DefaultProductApiUrl, stringContent);
 

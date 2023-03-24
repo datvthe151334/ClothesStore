@@ -10,6 +10,7 @@ using BusinessObject.DTO;
 using Microsoft.Extensions.Configuration;
 using ClothesStoreAPI.Config;
 using BusinessObject.Models;
+using ClothesStoreAPI.Configuration;
 
 namespace ClothesStoreAPI.Controllers
 {
@@ -114,6 +115,26 @@ namespace ClothesStoreAPI.Controllers
             {
                 await repository.DeleteAccount(id);
                 return StatusCode(204, "Delete successfully!");
+            }
+            catch (ApplicationException ae)
+            {
+                return StatusCode(400, ae.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        //Reset Password
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> Get(string? email)
+        {
+            try
+            {
+                var resetPassword = await repository.GetResetPassword(email);
+                if (resetPassword == null) return NotFound();
+                return StatusCode(200, MailConfiguration.SendRecoveryMail(email, resetPassword, configuration));
             }
             catch (ApplicationException ae)
             {
