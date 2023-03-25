@@ -61,6 +61,23 @@ namespace DataAccess
             return account;
         }
 
+        public static async Task<Account> GetAccountByCustomer(string id)
+        {
+            Account? account = new Account();
+            try
+            {
+                using (var context = new ClothesStoreDBContext())
+                {
+                    account = await  context.Accounts.Include(x => x.Employee).Include(x => x.Customer).SingleOrDefaultAsync(x => x.CustomerId.Equals(id));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return account;
+        }
+
         public static async Task<Account> GetAccountByEmail(string email)
         {
             Account? account = new Account();
@@ -133,5 +150,71 @@ namespace DataAccess
                 throw new Exception(ex.Message);
             }
         }
+        public static async Task<bool> SaveCustomer(SignUpDTO req)
+        {
+            req.customer!.CustomerId = RandomUtils.RandomString(5);
+            while (await CustomerDAO.GetCustomerById(req.customer.CustomerId) != null)
+            {
+                req.customer!.CustomerId = RandomUtils.RandomString(5);
+            }
+            using (var context = new ClothesStoreDBContext())
+            {
+                Account account = new Account
+                {
+                    Email = req.Email,
+                    Password = req.Password,
+                    CustomerId = req.customer!.CustomerId,
+                    IsActive = true,
+                    Customer = new Customer()
+                    {
+                        CustomerId = req.customer!.CustomerId,
+                        CompanyName = req.customer!.CompanyName ?? "Notyet",
+                        ContactName = req.customer!.ContactName,
+                        ContactTitle = req.customer!.ContactTitle,
+                        Address = req.customer!.Address,
+                        IsActive = true,
+                    },
+                    Role = req.Role
+                    
+                };
+                await context.Accounts.AddAsync(account);
+                return await context.SaveChangesAsync() > 0;
+            }
+        }
+        public static async Task<bool> UpdateCustomer(SignUpDTO req)
+        {
+            var cus = CustomerDAO.GetCustomerByIdNotTask(req.customer!.CustomerId);
+            var acc = await GetAccountByCustomer(req.customer!.CustomerId);
+            using (var context = new ClothesStoreDBContext())
+            {
+
+                acc.Email = req.Email;
+                acc.Password = req.Password;                
+                cus.CustomerId = req.customer!.CustomerId;
+                cus.CompanyName = req.customer!.CompanyName ?? "Notyet";
+                cus.ContactName = req.customer!.ContactName;
+                cus.ContactTitle = req.customer!.ContactTitle;
+                cus.Address = req.customer!.Address;
+                context.Entry<Customer>(cus).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                context.Entry<Account>(acc).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                return await context.SaveChangesAsync() > 0;
+            }
+        }
+/*        public static async Task<SignUpDTO> GetInfoCustomer(SignUpDTO req)
+        {
+
+            var acc = await GetAccountByCustomer(req.customer!.CustomerId);
+            
+
+                req.Email = acc.Email;
+                req.Password = acc.Password;
+                req.customer!.CustomerId = acc.Customer!.CustomerId;
+                req.customer!.CompanyName = acc.Customer!.CompanyName  ?? "Notyet";
+                req.customer!.ContactName = acc.Customer!.ContactName;
+                req.customer!.ContactTitle = acc.Customer!.ContactTitle;
+                req.customer!.Address = acc.Customer!.Address;
+                return req;
+            
+        }*/
     }
 }

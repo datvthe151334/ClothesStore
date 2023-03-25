@@ -1,4 +1,5 @@
 ﻿using BusinessObject.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Net.Http.Headers;
@@ -69,7 +70,9 @@ namespace ClothesStore.Controllers
 
 		//POST: product/create
 		[HttpPost]
+        [Authorize(Roles = "1")]
 		[ValidateAntiForgeryToken]
+        
 		public async Task<ActionResult> Create(CategoryDTO categoryDTO)
 		{
 			var stringContent = new StringContent(JsonSerializer.Serialize<CategoryDTO>(categoryDTO), Encoding.UTF8, "application/json");

@@ -153,5 +153,42 @@ namespace ClothesStoreAPI.Controllers
             user.TokenCreated = newRefreshToken.Created;
             user.TokenExpires = newRefreshToken.Expires;
         }
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("signup")]
+        public async Task<IActionResult> Post(SignUpDTO req)
+        {
+            if (req is null) return BadRequest();
+            var isSave = await repository.Save(req);
+            if (isSave) return Ok(isSave);
+            return Conflict();
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("updateProfile")]
+        public async Task<IActionResult> updateProfile(SignUpDTO req)
+        {
+            if (req is null) return BadRequest();
+            var isSave = await repository.Update(req);
+            if (isSave) return Ok(isSave);
+            return Conflict();
+        }
+
+/*        [HttpGet("GetInfoCustomerById/{id}")]
+        public async Task<IActionResult> GetInfoCustomerById(SignUpDTO info)
+        {
+            try
+            {
+                return StatusCode(200, await repository.GetInfoCustomerById(info));
+            }
+            catch (ApplicationException ae)
+            {
+                return StatusCode(400, ae.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }*/
     }
 }

@@ -1,0 +1,66 @@
+﻿@using BusinessObject.DTO
+@model SignUpDTO
+<div class="page-head_agile_info_w3l">
+		<div class="container">
+			<h3>M<span>y Profile </span></h3>
+			<!--/w3_short-->
+				 <div class="services-breadcrumb">
+						<div class="agile_inner_breadcrumb">
+
+						   <ul class="w3_short">
+								<li><a href="index.html">Home</a><i>|</i></li>
+								<li>Profile</li>
+							</ul>
+						 </div>
+				</div>
+	   <!--//w3_short-->
+	</div>
+</div>   
+<div class="banner_bottom_agile_info">
+	<div class="container">
+	   <div class="agile-contact-grids">
+				<div class="agile-contact-left">
+					
+					<div class="col-md-12 contact-form">
+						<h4 class="white-w3ls">Contact <span>Form</span></h4>
+						@using (Html.BeginForm("SignIn", "Home", FormMethod.Post))
+						{ 
+							<div class="styled-input agile-styled-input-top">
+								<input type="email" asp-for="@Model.Email" />
+								<label>Name</label>
+								<span></span>
+							</div>
+							<div class="styled-input">
+										<input type="text" asp-for="@Model.Password" />
+										<label>Password</label>
+										<span></span>
+									</div> 
+										<div class="styled-input">
+										<input type="text" asp-for="@Model.customer!.CompanyName"  />
+										<label>CompanyName</label>
+										<span></span>
+									</div>
+									<div class="styled-input">
+										<input type="text" asp-for="@Model.customer!.ContactName"  />
+										<label>ContactName</label>
+										<span></span>
+									</div>
+									<div class="styled-input">
+										<input type="text" asp-for="@Model.customer!.ContactTitle"  />
+										<label>ContactTitle</label>
+										<span></span>
+									</div>
+									<div class="styled-input">
+										<input type="text" asp-for="@Model.customer!.Address"  />
+										<label>Address</label>
+										<span></span>
+									</div>
+									<input type="hidden" asp-for="@Model.customer!.CustomerId"  />
+							<input type="submit" value="SEND">
+						}
+					</div>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+	   </div>
+	</div>

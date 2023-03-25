@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Models;
+using DataAccess.Utils;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -50,6 +51,22 @@ namespace DataAccess
             }
             return customer;
         }
+        public static Customer GetCustomerByIdNotTask(string id)
+        {
+            Customer customer = new Customer();
+            try
+            {
+                using (var context = new ClothesStoreDBContext())
+                {
+                    customer = context.Customers.SingleOrDefault(x => x.CustomerId == id);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return customer;
+        }
 
         public static async Task<Customer> CreateCustomer(Customer customer)
         {
@@ -57,11 +74,11 @@ namespace DataAccess
             {
                 using (var context = new ClothesStoreDBContext())
                 {
-                    customer.CustomerId = RandomString(5);
+                    customer.CustomerId = RandomUtils.RandomString(5);
                     var cus = await context.Customers.SingleOrDefaultAsync(x => x.CustomerId == customer.CustomerId);
                     while(cus != null)
                     {
-                        customer.CustomerId = RandomString(5);
+                        customer.CustomerId = RandomUtils.RandomString(5);
                         cus = await context.Customers.SingleOrDefaultAsync(x => x.CustomerId == customer.CustomerId);
                     }
                     await context.Customers.AddAsync(customer);
@@ -113,11 +130,6 @@ namespace DataAccess
             }
         }
 
-        public static string RandomString(int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
+       
     }
 }

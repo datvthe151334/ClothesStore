@@ -72,7 +72,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //POST
-
+        [Authorize(Policy = "EmpOnly")]
         [HttpPost]
         public async Task<IActionResult> CreateCategory([FromBody] CategoryDTO categoryDTO)
         {

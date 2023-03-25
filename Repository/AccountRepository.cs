@@ -41,5 +41,13 @@ namespace Repository
         {
             return await AccountDAO.GetResetPassword(email);
         }
+
+        public async Task<bool> Save(SignUpDTO req) => await AccountDAO.SaveCustomer(req);
+
+        public async Task<bool> Update(SignUpDTO req) => await AccountDAO.UpdateCustomer(req);
+
+      /*  public async Task<SignUpDTO> GetInfoCustomerById(SignUpDTO info) => await AccountDAO.GetInfoCustomer(info);*/
+
+        
     }
 }

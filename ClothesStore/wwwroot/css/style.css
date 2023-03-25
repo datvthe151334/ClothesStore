@@ -961,8 +961,8 @@ color: #2fdab8;
     padding: 1em 0em 0 0em;
 }
 .contact-form {
-    background: #181919;
-    padding: 5em 3em;
+	background: antiquewhite;
+	padding: 5em 3em;
 }
 .contact input[type="text"], .contact input[type="email"], .contact textarea {
     font-size: 15px;
@@ -2061,7 +2061,7 @@ h3.tittle {
 .contact-form input[type="text"], .contact-form input[type="email"], .contact-form textarea {
     font-size: 15px;
     letter-spacing: 1px;
-    color: #fff;
+    color: black;
     padding: 0.5em 1em;
     border: 0;
     width: 100%;

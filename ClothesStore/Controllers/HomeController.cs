@@ -109,7 +109,7 @@ namespace ClothesStore.Controllers
 
                 if(user.Account.EmployeeId != null)
                 {
-                    return RedirectToAction("Index", "AdminCategory", new { @loginMessage = name });
+                    return RedirectToAction("create", "AdminCategory", new { @loginMessage = name });
                 }
                 else
                 {
@@ -123,7 +123,7 @@ namespace ClothesStore.Controllers
         }
 
         
-        public async Task<IActionResult> Index([FromQuery] string? CategoryGeneral, string? loginMessage, string? resetMessage)
+        public async Task<IActionResult> Index([FromQuery] string? CategoryGeneral, string? loginMessage, string? resetMessage, string? signUpMessage)
         {
             if (CategoryGeneral == null) CategoryGeneral = "men";
             //Get Products
@@ -171,12 +171,13 @@ namespace ClothesStore.Controllers
 
             ViewBag.listCategories = listCategories;
             ViewBag.listCategoryGeneral = listCategoryGeneral;
-
+            ViewBag.listProducts = listProducts.OrderByDescending(x => x.ProductId).Take(12).ToList();
             ViewData["CurCatGeneral"] = CategoryGeneral;
             /* ViewData["TotalCustomer"] = listCustomers.Count;*/
             ViewData["login"] = loginMessage;
             ViewData["ResetMessage"] = resetMessage;
-            return View(listProducts.OrderByDescending(x => x.ProductId).Take(12).ToList());
+            ViewData["signUpMessage"] = signUpMessage;
+            return View();
         }
 
         private void validateToken(string token)
@@ -235,5 +236,25 @@ namespace ClothesStore.Controllers
             var Response = await client.PostAsync(targerAddress, new StringContent(content, Encoding.UTF8, "application/json"));
             return Response;
         }
+
+        [HttpGet]
+        public IActionResult signout()
+        {
+            Response.Cookies.Delete("accessToken");
+            Response.Cookies.Delete("refreshToken");
+            return RedirectToAction("index");
+        }
+        
+
+        [HttpPost]
+        public IActionResult SignUp(SignUpDTO req)
+        {
+            var conn = "api/Accounts/signup";
+            var Res = PostData(conn, JsonConvert.SerializeObject(req));
+            if (!Res.Result.IsSuccessStatusCode) return StatusCode(StatusCodes.Status500InternalServerError);
+            return RedirectToAction("Index", "Home", new { @signUpMessage = "Signup successfully" });
+        }
+
+        
     }
 }
