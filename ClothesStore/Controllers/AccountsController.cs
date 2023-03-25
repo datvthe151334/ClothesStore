@@ -26,7 +26,7 @@ namespace ClothesStore.Controllers
             this.configuration = configuration;
         }
         [HttpGet]
-        public async Task<IActionResult> Profile()       
+        public async Task<IActionResult> Profile(string? alertMessage)       
         {
             var contactName = "";
             var mySessionValue = HttpContext.Session.GetString("user");
@@ -62,6 +62,7 @@ namespace ClothesStore.Controllers
             List<CategoryDTO>? listCategories = JsonConvert.DeserializeObject<List<CategoryDTO>>(strCategories);
             AccountUpdateDTO? accInfo = JsonConvert.DeserializeObject<AccountUpdateDTO>(strinfoAccountsGeneral);
             @ViewData["Name"] = contactName;
+            @ViewData["AlertMessage"] = alertMessage;
             ViewBag.listCategories = listCategories;
             ViewBag.listCategoryGeneral = listCategoryGeneral;
             return View(accInfo);
@@ -72,7 +73,7 @@ namespace ClothesStore.Controllers
             
             var conn = "api/Accounts/updateProfile";
             var Res = PostData(conn, JsonConvert.SerializeObject(req));
-            if (!Res.Result.IsSuccessStatusCode) return StatusCode(StatusCodes.Status500InternalServerError);
+            if (!Res.Result.IsSuccessStatusCode) return RedirectToAction("Profile", "Accounts", new { @alertMessage = "Update failed!" });
             var contactName = "";
             var mySessionValue = HttpContext.Session.GetString("user");
             if (mySessionValue == null)
@@ -85,7 +86,7 @@ namespace ClothesStore.Controllers
                 contactName = userObject.account.customer.contactName;
             }
             @ViewData["Name"] = contactName;
-            return RedirectToAction("Profile", "Accounts", new { @signUpMessage = "Update successfully" });
+            return RedirectToAction("Profile", "Accounts", new { @alertMessage = "Update successfully!" });
         }
 
         public async Task<HttpResponseMessage> PostData(string targerAddress, string content)

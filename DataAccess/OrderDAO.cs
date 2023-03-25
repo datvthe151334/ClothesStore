@@ -56,7 +56,7 @@ namespace DataAccess
             {
                 using (var context = new ClothesStoreDBContext())
                 {
-                    Orders = await context.Orders.Include(x => x.Customer).Include(x => x.Employee).Include(x => x.OrderDetails).ThenInclude(x => x.Product).Where(x => x.CustomerId == customerId).ToListAsync();
+                    Orders = await context.Orders.Include(x => x.Customer).Include(x => x.Employee).Include(x => x.OrderDetails).ThenInclude(x => x.Product).Where(x => x.CustomerId == customerId).OrderByDescending(x => x.OrderDate).ToListAsync();
                 }
             }
             catch (Exception ex)

@@ -71,9 +71,9 @@ namespace ClothesStore.Controllers
 
             if (response.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index", "Home", new { @resetMessage = "Send mail successfully!" });
+                return RedirectToAction("Index", "Home", new { @alertMessage = "Send mail successfully!" });
             }
-            return RedirectToAction("Index", "Home", new { @resetMessage = "Send mail fail, Re-enter your email!" });
+            return RedirectToAction("Index", "Home", new { @alertMessage = "Send mail fail, Re-enter your email!" });
         }
 
         [HttpPost]
@@ -89,7 +89,7 @@ namespace ClothesStore.Controllers
             if (!Res.Result.IsSuccessStatusCode)
             {
                 /*return StatusCode(StatusCodes.Status500InternalServerError);*/
-                return RedirectToAction("Index", "Home", new { @loginMessage = "fail" });
+                return RedirectToAction("Index", "Home", new { @alertMessage = "Login fail!" });
 
             }
             else
@@ -108,11 +108,11 @@ namespace ClothesStore.Controllers
 
                 if(user.Account.EmployeeId != null)
                 {
-                    return RedirectToAction("create", "AdminCategory", new { @loginMessage = "Success" });
+                    return RedirectToAction("create", "AdminCategory", new { @alertMessage = "Login successfully!" });
                 }
                 else
                 {
-                    return RedirectToAction("Index", "Home", new { @loginMessage = "Success" });
+                    return RedirectToAction("Index", "Home", new { @alertMessage = "Login successfully!" });
                 }
 
 
@@ -122,7 +122,7 @@ namespace ClothesStore.Controllers
         }
 
         
-        public async Task<IActionResult> Index([FromQuery] string? CategoryGeneral, string? loginMessage, string? resetMessage, string? signUpMessage)
+        public async Task<IActionResult> Index([FromQuery] string? CategoryGeneral, string? alertMessage)
         {
             var contactName = "";
             if (CategoryGeneral == null) CategoryGeneral = "men";
@@ -184,9 +184,7 @@ namespace ClothesStore.Controllers
             ViewBag.listProducts = listProducts.OrderByDescending(x => x.ProductId).Take(12).ToList();
             ViewData["CurCatGeneral"] = CategoryGeneral;
             /* ViewData["TotalCustomer"] = listCustomers.Count;*/
-            /*ViewData["login"] = loginMessage;*/
-            ViewData["ResetMessage"] = resetMessage;
-            ViewData["signUpMessage"] = signUpMessage;
+            ViewData["AlertMessage"] = alertMessage;
             @ViewData["Name"] = contactName;
             return View();
         }
@@ -262,8 +260,8 @@ namespace ClothesStore.Controllers
         {
             var conn = "api/Accounts/signup";
             var Res = PostData(conn, JsonConvert.SerializeObject(req));
-            if (!Res.Result.IsSuccessStatusCode) return StatusCode(StatusCodes.Status500InternalServerError);
-            return RedirectToAction("Index", "Home", new { @signUpMessage = "Signup successfully" });
+            if (!Res.Result.IsSuccessStatusCode) return RedirectToAction("Index", "Home", new { @alertMessage = "Signup fail!" });
+            return RedirectToAction("Index", "Home", new { @alertMessage = "Signup successfully!" });
         }
 
         
