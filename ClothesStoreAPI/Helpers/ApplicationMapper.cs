@@ -42,6 +42,7 @@ namespace ClothesStoreAPI.Helpers
                     dest => dest.EmployeeName,
                     opt => opt.MapFrom(src => src.Employee!.LastName));
             CreateMap<AccountDTO, Account>();
+            CreateMap<AccountUpdateDTO, Account>().ReverseMap();
 
             //Order Mapper
             CreateMap<Order, OrderDTO>()
@@ -52,6 +53,7 @@ namespace ClothesStoreAPI.Helpers
                     dest => dest.EmployeeName,
                     opt => opt.MapFrom(src => src.Employee!.LastName));
             CreateMap<OrderDTO, Order>();
+           
         }
     }
 }

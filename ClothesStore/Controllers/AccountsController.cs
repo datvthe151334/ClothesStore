@@ -26,12 +26,17 @@ namespace ClothesStore.Controllers
             this.configuration = configuration;
         }
         [HttpGet]
-        public async Task<IActionResult> Profile(SignUpDTO info)
+        public async Task<IActionResult> Profile()       
         {
-/*            //Get InfomationAccountGeneral
-            HttpResponseMessage infoAccountsResponse = await client.GetAsync(DefaultCategoryApiUrl + "/GetInfoCustomerById/" + info.customer.CustomerId);
-            string strinfoAccountsGeneral = await infoAccountsResponse.Content.ReadAsStringAsync();*/
-            
+            var mySessionValue = HttpContext.Session.GetString("user");
+            var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+
+            // Truy cập customerId của đối tượng JSON
+            var customerId = userObject.account.customerId;
+            //Get InfomationAccountGeneral
+            HttpResponseMessage infoAccountsResponse = await client.GetAsync(DefaultAccountsApiUrl + "/GetInfoCustomerById/" + customerId);
+            string strinfoAccountsGeneral = await infoAccountsResponse.Content.ReadAsStringAsync();
+
             //Get CategoryGeneral
             HttpResponseMessage categoryGeneralResponse = await client.GetAsync(DefaultCategoryApiUrl + "/getCategoryGeneral");
             string strCategoryGeneral = await categoryGeneralResponse.Content.ReadAsStringAsync();
@@ -46,18 +51,19 @@ namespace ClothesStore.Controllers
             };
             List<string>? listCategoryGeneral = JsonConvert.DeserializeObject<List<string>>(strCategoryGeneral);
             List<CategoryDTO>? listCategories = JsonConvert.DeserializeObject<List<CategoryDTO>>(strCategories);
+            AccountUpdateDTO? accInfo = JsonConvert.DeserializeObject<AccountUpdateDTO>(strinfoAccountsGeneral);
 
             ViewBag.listCategories = listCategories;
             ViewBag.listCategoryGeneral = listCategoryGeneral;
-            return View();
+            return View(accInfo);
         }
         [HttpPost]
-        public IActionResult UpdateCustomer(SignUpDTO req)
+        public IActionResult UpdateCustomer(AccountUpdateDTO req)
         {
             var conn = "api/Accounts/updateProfile";
             var Res = PostData(conn, JsonConvert.SerializeObject(req));
             if (!Res.Result.IsSuccessStatusCode) return StatusCode(StatusCodes.Status500InternalServerError);
-            return RedirectToAction("Index", "Home", new { @signUpMessage = "Update successfully" });
+            return RedirectToAction("Profile", "Accounts", new { @signUpMessage = "Update successfully" });
         }
 
         public async Task<HttpResponseMessage> PostData(string targerAddress, string content)

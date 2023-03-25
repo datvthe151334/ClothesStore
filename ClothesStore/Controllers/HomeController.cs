@@ -39,7 +39,7 @@ namespace ClothesStore.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult SignIn()
         {
             if (string.IsNullOrEmpty(HttpContext.Request.Cookies["accessToken"]) && !string.IsNullOrEmpty(HttpContext.Request.Cookies["refreshToken"]))
             {
@@ -57,7 +57,6 @@ namespace ClothesStore.Controllers
                 validateToken(user!.AccessToken!.Replace("\"", ""));
 
                 Response.Cookies.Append("refreshToken", user.RefreshToken!, new CookieOptions { Expires = user.TokenExpires, HttpOnly = true, SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict });
-                ViewData["login"] = "Sai";
                 return Redirect("/");
             }
 
@@ -101,7 +100,7 @@ namespace ClothesStore.Controllers
                  name = user.Name;
 
                 HttpContext.Session.SetString("user", Res.Result.Content.ReadAsStringAsync().Result);
-
+                var mySessionValue = HttpContext.Session.GetString("user");
                 validateToken(user!.AccessToken!.Replace("\"", ""));
 
                 Response.Cookies.Append("refreshToken", user.RefreshToken!, new CookieOptions

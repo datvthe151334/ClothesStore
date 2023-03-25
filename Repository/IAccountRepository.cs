@@ -16,8 +16,8 @@ namespace Repository
         Task<Account> Account(LoginDTO req);
         Task DeleteAccount(int id);
         Task<bool> Save(SignUpDTO req);
-        Task<bool> Update(SignUpDTO req);
-/*        Task<SignUpDTO> GetInfoCustomerById(SignUpDTO info);*/
+        Task<bool> Update(AccountUpdateDTO req);
+        Task<AccountUpdateDTO> GetInfoCustomerById(string id);
         Task<string?> GetResetPassword(string? email);
     }
 }

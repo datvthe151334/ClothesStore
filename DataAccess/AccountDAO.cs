@@ -181,40 +181,27 @@ namespace DataAccess
                 return await context.SaveChangesAsync() > 0;
             }
         }
-        public static async Task<bool> UpdateCustomer(SignUpDTO req)
+        public static async Task<bool> UpdateCustomer(Account? req)
         {
-            var cus = CustomerDAO.GetCustomerByIdNotTask(req.customer!.CustomerId);
-            var acc = await GetAccountByCustomer(req.customer!.CustomerId);
+            var acc = await GetAccountByCustomer(req.Customer!.CustomerId);
+            Customer cus = await CustomerDAO.GetCustomerById(req.CustomerId);
+            cus.CompanyName = req.Customer.CompanyName;
+            cus.ContactName = req.Customer.ContactName;
+            cus.ContactTitle = req.Customer.ContactTitle;
+            cus.Address = req.Customer.Address;
+
             using (var context = new ClothesStoreDBContext())
             {
-
-                acc.Email = req.Email;
-                acc.Password = req.Password;                
-                cus.CustomerId = req.customer!.CustomerId;
-                cus.CompanyName = req.customer!.CompanyName ?? "Notyet";
-                cus.ContactName = req.customer!.ContactName;
-                cus.ContactTitle = req.customer!.ContactTitle;
-                cus.Address = req.customer!.Address;
+               /* req.CustomerId = acc.CustomerId;*/
+                context.Entry<Account>(req).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 context.Entry<Customer>(cus).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                context.Entry<Account>(acc).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 return await context.SaveChangesAsync() > 0;
             }
         }
-/*        public static async Task<SignUpDTO> GetInfoCustomer(SignUpDTO req)
+        public static async Task<Account> GetInfoCustomer(string id)
         {
-
-            var acc = await GetAccountByCustomer(req.customer!.CustomerId);
-            
-
-                req.Email = acc.Email;
-                req.Password = acc.Password;
-                req.customer!.CustomerId = acc.Customer!.CustomerId;
-                req.customer!.CompanyName = acc.Customer!.CompanyName  ?? "Notyet";
-                req.customer!.ContactName = acc.Customer!.ContactName;
-                req.customer!.ContactTitle = acc.Customer!.ContactTitle;
-                req.customer!.Address = acc.Customer!.Address;
-                return req;
-            
-        }*/
+            var acc = await GetAccountByCustomer(id);
+            return acc;
+        }
     }
 }

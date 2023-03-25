@@ -166,7 +166,7 @@ namespace ClothesStoreAPI.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("updateProfile")]
-        public async Task<IActionResult> updateProfile(SignUpDTO req)
+        public async Task<IActionResult> updateProfile(AccountUpdateDTO req)
         {
             if (req is null) return BadRequest();
             var isSave = await repository.Update(req);
@@ -174,12 +174,12 @@ namespace ClothesStoreAPI.Controllers
             return Conflict();
         }
 
-/*        [HttpGet("GetInfoCustomerById/{id}")]
-        public async Task<IActionResult> GetInfoCustomerById(SignUpDTO info)
+        [HttpGet("GetInfoCustomerById/{id}")]
+        public async Task<IActionResult> GetInfoCustomerById(string id)
         {
             try
             {
-                return StatusCode(200, await repository.GetInfoCustomerById(info));
+                return StatusCode(200, await repository.GetInfoCustomerById(id));
             }
             catch (ApplicationException ae)
             {
@@ -189,6 +189,6 @@ namespace ClothesStoreAPI.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
-        }*/
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿@using BusinessObject.DTO
-@model SignUpDTO
+@model AccountUpdateDTO
 <div class="page-head_agile_info_w3l">
 		<div class="container">
 			<h3>M<span>y Profile </span></h3>
@@ -23,7 +23,7 @@
 					
 					<div class="col-md-12 contact-form">
 						<h4 class="white-w3ls">Contact <span>Form</span></h4>
-						@using (Html.BeginForm("SignIn", "Home", FormMethod.Post))
+						@using (Html.BeginForm("UpdateCustomer", "Accounts", FormMethod.Post))
 						{ 
 							<div class="styled-input agile-styled-input-top">
 								<input type="email" asp-for="@Model.Email" />
@@ -36,26 +36,30 @@
 										<span></span>
 									</div> 
 										<div class="styled-input">
-										<input type="text" asp-for="@Model.customer!.CompanyName"  />
+										<input type="text" asp-for="@Model.Customer!.CompanyName"  />
 										<label>CompanyName</label>
 										<span></span>
 									</div>
 									<div class="styled-input">
-										<input type="text" asp-for="@Model.customer!.ContactName"  />
+										<input type="text" asp-for="@Model.Customer!.ContactName"  />
 										<label>ContactName</label>
 										<span></span>
 									</div>
 									<div class="styled-input">
-										<input type="text" asp-for="@Model.customer!.ContactTitle"  />
+										<input type="text" asp-for="@Model.Customer!.ContactTitle"  />
 										<label>ContactTitle</label>
 										<span></span>
 									</div>
 									<div class="styled-input">
-										<input type="text" asp-for="@Model.customer!.Address"  />
+										<input type="text" asp-for="@Model.Customer!.Address"  />
 										<label>Address</label>
 										<span></span>
 									</div>
-									<input type="hidden" asp-for="@Model.customer!.CustomerId"  />
+									<input type="hidden" asp-for="@Model.IsActive"/>
+									<input type="hidden" asp-for="@Model.Role"/>
+									<input type="hidden" asp-for="@Model.CustomerId"/>
+									<input type="hidden" asp-for="@Model.AccountId"/>
+									<input type="hidden" asp-for="@Model.Customer!.CustomerId"/>
 							<input type="submit" value="SEND">
 						}
 					</div>

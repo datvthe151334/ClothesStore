@@ -44,10 +44,10 @@ namespace Repository
 
         public async Task<bool> Save(SignUpDTO req) => await AccountDAO.SaveCustomer(req);
 
-        public async Task<bool> Update(SignUpDTO req) => await AccountDAO.UpdateCustomer(req);
+        public async Task<bool> Update(AccountUpdateDTO? req) => await AccountDAO.UpdateCustomer(_mapper.Map<Account>(req));
 
-      /*  public async Task<SignUpDTO> GetInfoCustomerById(SignUpDTO info) => await AccountDAO.GetInfoCustomer(info);*/
+        public async Task<AccountUpdateDTO> GetInfoCustomerById(string id) => _mapper.Map<AccountUpdateDTO>(await AccountDAO.GetInfoCustomer(id));
 
-        
+
     }
 }
