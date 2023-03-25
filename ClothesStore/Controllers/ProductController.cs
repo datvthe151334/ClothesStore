@@ -1,6 +1,7 @@
 ﻿using BusinessObject.DTO;
 using BusinessObject.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
@@ -23,6 +24,7 @@ namespace ClothesStore.Controllers
 
         public async Task<IActionResult> Detail(int id)
         {
+            var contactName = "";
             //Get Products
             HttpResponseMessage productsResponse = await client.GetAsync(DefaultProductApiUrl + "/" + id);
             string strProduct = await productsResponse.Content.ReadAsStringAsync();
@@ -39,26 +41,37 @@ namespace ClothesStore.Controllers
             {
                 PropertyNameCaseInsensitive = true
             };
+            var mySessionValue = HttpContext.Session.GetString("user");
+            if (mySessionValue == null)
+            {
+                contactName = "Chưa đăng nhập";
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                contactName = userObject.account.customer.contactName;
+            }
 
-            ProductDTO? product = JsonSerializer.Deserialize<ProductDTO>(strProduct, options);
-            List<string>? listCategoryGeneral = JsonSerializer.Deserialize<List<string>>(strCategoryGeneral, options);
-            List<CategoryDTO>? listCategories = JsonSerializer.Deserialize<List<CategoryDTO>>(strCategories, options);
+            ProductDTO? product = JsonConvert.DeserializeObject<ProductDTO>(strProduct);
+            List<string>? listCategoryGeneral = JsonConvert.DeserializeObject<List<string>>(strCategoryGeneral);
+            List<CategoryDTO>? listCategories = JsonConvert.DeserializeObject<List<CategoryDTO>>(strCategories);
 
             //Get related product
             HttpResponseMessage relatedProductsResponse = await client.GetAsync(DefaultProductApiUrl + "/filterByCatId/" + product.CategoryId);
             string strRelatedProducts = await relatedProductsResponse.Content.ReadAsStringAsync();
 
-            List<ProductDTO>? listRelatedProducts = JsonSerializer.Deserialize<List<ProductDTO>>(strRelatedProducts, options);
+            List<ProductDTO>? listRelatedProducts = JsonConvert.DeserializeObject<List<ProductDTO>>(strRelatedProducts);
 
             ViewBag.listRelatedProducts = listRelatedProducts.OrderBy(x => Guid.NewGuid()).Where(x => x.ProductId != product.ProductId).Take(4).ToList();
             ViewBag.listCategories = listCategories;
             ViewBag.listCategoryGeneral = listCategoryGeneral;
-
+            @ViewData["Name"] = contactName;
             return View(product);
         }
 
         public async Task<IActionResult> Index(int? categoryId, string? text, string? sortType)
         {
+            var contactName = "";
             //Get Products By Name t nghị sau ni chỗ search/filterbyid chỉ cần dùng cái api ni là đc : DefaultProductApiUrl + "/FilterProduct?categoryId=" + categoryId + "&text="+ text phbair ko
             HttpResponseMessage productsResponse = await client.GetAsync(DefaultProductApiUrl + "/FilterProduct?categoryId=" + categoryId + "&text="+ text + "&sortType=" + sortType);
             string strProduct = await productsResponse.Content.ReadAsStringAsync();
@@ -75,14 +88,25 @@ namespace ClothesStore.Controllers
             {
                 PropertyNameCaseInsensitive = true
             };
-            List<ProductDTO>? product = JsonSerializer.Deserialize<List<ProductDTO>>(strProduct, options);
-            List<string>? listCategoryGeneral = JsonSerializer.Deserialize<List<string>>(strCategoryGeneral, options);
-            List<CategoryDTO>? listCategories = JsonSerializer.Deserialize<List<CategoryDTO>>(strCategories, options);
+            List<ProductDTO>? product = JsonConvert.DeserializeObject<List<ProductDTO>>(strProduct);
+            List<string>? listCategoryGeneral = JsonConvert.DeserializeObject<List<string>>(strCategoryGeneral);
+            List<CategoryDTO>? listCategories = JsonConvert.DeserializeObject<List<CategoryDTO>>(strCategories);
+            var mySessionValue = HttpContext.Session.GetString("user");
+            if (mySessionValue == null)
+            {
+                contactName = "Chưa đăng nhập";
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                contactName = userObject.account.customer.contactName;
+            }
             ViewBag.listCategories = listCategories;
             ViewBag.listCategoryGeneral = listCategoryGeneral;
             ViewData["text"] = text;
             ViewData["categoryId"] = categoryId;
             ViewData["sortType"] = sortType;
+            @ViewData["Name"] = contactName;
             ViewBag.SortType = sortType;
             return View(product);
         }

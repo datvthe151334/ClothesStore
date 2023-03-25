@@ -28,6 +28,7 @@ namespace ClothesStore.Controllers
         [HttpGet]
         public async Task<IActionResult> Profile()       
         {
+            var contactName = "";
             var mySessionValue = HttpContext.Session.GetString("user");
             var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
 
@@ -49,10 +50,18 @@ namespace ClothesStore.Controllers
             {
                 PropertyNameCaseInsensitive = true
             };
+            if (mySessionValue == null)
+            {
+                contactName = "Chưa đăng nhập";
+            }
+            else
+            {
+                contactName = userObject.account.customer.contactName;
+            }
             List<string>? listCategoryGeneral = JsonConvert.DeserializeObject<List<string>>(strCategoryGeneral);
             List<CategoryDTO>? listCategories = JsonConvert.DeserializeObject<List<CategoryDTO>>(strCategories);
             AccountUpdateDTO? accInfo = JsonConvert.DeserializeObject<AccountUpdateDTO>(strinfoAccountsGeneral);
-
+            @ViewData["Name"] = contactName;
             ViewBag.listCategories = listCategories;
             ViewBag.listCategoryGeneral = listCategoryGeneral;
             return View(accInfo);
@@ -60,9 +69,22 @@ namespace ClothesStore.Controllers
         [HttpPost]
         public IActionResult UpdateCustomer(AccountUpdateDTO req)
         {
+            
             var conn = "api/Accounts/updateProfile";
             var Res = PostData(conn, JsonConvert.SerializeObject(req));
             if (!Res.Result.IsSuccessStatusCode) return StatusCode(StatusCodes.Status500InternalServerError);
+            var contactName = "";
+            var mySessionValue = HttpContext.Session.GetString("user");
+            if (mySessionValue == null)
+            {
+                contactName = "Chưa đăng nhập";
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                contactName = userObject.account.customer.contactName;
+            }
+            @ViewData["Name"] = contactName;
             return RedirectToAction("Profile", "Accounts", new { @signUpMessage = "Update successfully" });
         }
 

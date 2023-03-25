@@ -84,7 +84,7 @@ namespace ClothesStore.Controllers
                 us.Password = password;
                 var Res = PostData("api/Accounts/signin", JsonConvert.SerializeObject(us));
         
-                var name = "";
+                /*var name = "";*/
 
             if (!Res.Result.IsSuccessStatusCode)
             {
@@ -97,10 +97,10 @@ namespace ClothesStore.Controllers
 
                 var user = JsonConvert.DeserializeObject<AccountInfoTokenDTO>(Res.Result.Content.ReadAsStringAsync().Result);
                 
-                 name = user.Name;
+                 /*name = user.Name;*/
 
                 HttpContext.Session.SetString("user", Res.Result.Content.ReadAsStringAsync().Result);
-                var mySessionValue = HttpContext.Session.GetString("user");
+                
                 validateToken(user!.AccessToken!.Replace("\"", ""));
 
                 Response.Cookies.Append("refreshToken", user.RefreshToken!, new CookieOptions
@@ -108,11 +108,11 @@ namespace ClothesStore.Controllers
 
                 if(user.Account.EmployeeId != null)
                 {
-                    return RedirectToAction("create", "AdminCategory", new { @loginMessage = name });
+                    return RedirectToAction("create", "AdminCategory", new { @loginMessage = "Success" });
                 }
                 else
                 {
-                    return RedirectToAction("Index", "Home", new { @loginMessage = name });
+                    return RedirectToAction("Index", "Home", new { @loginMessage = "Success" });
                 }
 
 
@@ -124,6 +124,7 @@ namespace ClothesStore.Controllers
         
         public async Task<IActionResult> Index([FromQuery] string? CategoryGeneral, string? loginMessage, string? resetMessage, string? signUpMessage)
         {
+            var contactName = "";
             if (CategoryGeneral == null) CategoryGeneral = "men";
             //Get Products
             HttpResponseMessage productsResponse = await client.GetAsync(DefaultProductApiUrl);
@@ -167,15 +168,26 @@ namespace ClothesStore.Controllers
             ViewBag.listMenProducts = listMenProducts.OrderByDescending(x => x.ProductId).Take(12).ToList();
             ViewBag.listWomenProducts = listWomenProducts.OrderByDescending(x => x.ProductId).Take(12).ToList();
             ViewBag.listBabyProducts = listBabyProducts.OrderByDescending(x => x.ProductId).Take(12).ToList();
-
+            var mySessionValue = HttpContext.Session.GetString("user");
+            if (mySessionValue == null)
+            {
+                contactName = "Chưa đăng nhập";
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                contactName = userObject.account.customer.contactName;
+            }
+            
             ViewBag.listCategories = listCategories;
             ViewBag.listCategoryGeneral = listCategoryGeneral;
             ViewBag.listProducts = listProducts.OrderByDescending(x => x.ProductId).Take(12).ToList();
             ViewData["CurCatGeneral"] = CategoryGeneral;
             /* ViewData["TotalCustomer"] = listCustomers.Count;*/
-            ViewData["login"] = loginMessage;
+            /*ViewData["login"] = loginMessage;*/
             ViewData["ResetMessage"] = resetMessage;
             ViewData["signUpMessage"] = signUpMessage;
+            @ViewData["Name"] = contactName;
             return View();
         }
 

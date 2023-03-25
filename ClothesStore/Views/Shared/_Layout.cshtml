@@ -58,8 +58,8 @@ input[type="file"]{
 					 @if (Context.Request.Cookies["AccessToken"] is not null)
                     {
 		<ul>
-			<li> <a href="~/order/index"><i class="fa fa-cart-shopping" aria-hidden="true"></i> History Order</a> </li> 
-			<li> <a href="#" data-toggle="modal" data-target="#myModalUpdate"><i class="fa fa-user" aria-hidden="true"></i> Profile </a></li>
+			<li> <a href="~/order/index"><i class="fa fa-cart-shopping" aria-hidden="true"></i> History Order</a> </li>
+			<li> <a href="/Accounts/Profile"><i class="fa fa-user" aria-hidden="true"></i> Profile </a></li>
 				<li> <a href="/Home/signout"><i class="fa fa-sign-out"></i> Logout</a> </li>
 		</ul>
 					}
@@ -84,14 +84,15 @@ input[type="file"]{
 		<!-- header-bot -->
 		<div class="col-md-4 agileits-social top_content">
 						<ul class="social-nav model-3d-0 footer-social w3_agile_social">
-							 @if (Context.Request.Cookies["AccessToken"] is not null)
-                    {
-														   <li class="share">Xin chào, @ViewData["login"]  </li>
-															<li><a href="#" class="facebook">
-																  <div ><img  src="~/images/b2.jpg" style="width:40px;margin-bottom:30px;"></div>
-																  <div class="back"><img  src="~/images/b2.jpg" style="width:40px;margin-bottom:30px;"></div>
-																  </a></li>
-																 
+					@if (Context.Request.Cookies["AccessToken"] is not null)
+					{
+						
+																	   <li class="share">Xin chào, @ViewData["Name"]  </li>
+																	<li><a href="#" class="facebook">
+																		  <div ><img  src="~/images/b2.jpg" style="width:40px;margin-bottom:30px;"></div>
+																		  <div class="back"><img  src="~/images/b2.jpg" style="width:40px;margin-bottom:30px;"></div>
+																		  </a></li>
+
 					}
 														</ul>
 
