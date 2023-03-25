@@ -49,6 +49,23 @@ namespace DataAccess
             return order;
         }
 
+        public static async Task<List<Order>> GetOrdersByCustomer(string customerId)
+        {
+            List<Order> Orders = new List<Order>();
+            try
+            {
+                using (var context = new ClothesStoreDBContext())
+                {
+                    Orders = await context.Orders.Include(x => x.Customer).Include(x => x.Employee).Include(x => x.OrderDetails).ThenInclude(x => x.Product).Where(x => x.CustomerId == customerId).ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return Orders;
+        }
+
         public static async Task<Order> CreateOrder(Order order)
         {
             try

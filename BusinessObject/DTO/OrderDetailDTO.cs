@@ -10,6 +10,7 @@ namespace BusinessObject.DTO
     {
         public int? OrderId { get; set; }
         public string? ProductName { get; set; }
+        public string? ProductPicture { get; set; }
         public decimal? UnitPrice { get; set; }
         public short? Quantity { get; set; }
         public float? Discount { get; set; }

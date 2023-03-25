@@ -1,0 +1,50 @@
+﻿@using BusinessObject.DTO
+@model List<OrderDictionaryDTO>
+
+<div class="chit-chat-layer1">
+    <div class="col-md-12 col-lg-12">
+        <div class="work-progres">
+            <div class="chit-chat-heading">
+                <br />
+                <br />
+                <h3>Order History</h3>
+                <br />
+                <br />
+            </div>
+            @foreach (var item in Model)
+            {
+                <div style="width:80%; margin-left:auto; margin-right:auto; border-style: groove; border-radius: 10px; margin-bottom:20px;">
+                    <div style="background-color:#b8d9d0;">
+                        <h5 style="font-weight:bold;">Order Id: #@Html.DisplayFor(modelItem => item.OrderId)</h5>
+                        <h5 style="font-weight:bold;">Order Date: @Html.DisplayFor(modelItem => item.OrderDate)</h5>
+                        <h5 style="font-weight:bold;">Ship Address: @Html.DisplayFor(modelItem => item.ShipAddress)</h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Picture</th>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var od in @item.OrderDetails)
+                                {
+                                    <tr>
+                                        <td><img style="width:80px;height:100px" src="~/@od.ProductPicture" /></td>
+                                        <td>@od.ProductName</td>
+                                        <td>Quantity: @od.Quantity</td>
+                                        <td>Total: $@(@od.UnitPrice * @od.Quantity)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="clearfix"> </div>
+</div>

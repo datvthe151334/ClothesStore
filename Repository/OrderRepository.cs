@@ -27,6 +27,12 @@ namespace Repository
             return _mapper.Map<OrderDTO>(await OrderDAO.GetOrderById(id));
         }
 
+        public async Task<List<OrderDictionaryDTO>> GetOrdersByCustomer(string customerId)
+        {
+            var x = _mapper.Map<List<OrderDictionaryDTO>>(await OrderDAO.GetOrdersByCustomer(customerId));
+            return _mapper.Map<List<OrderDictionaryDTO>> (await OrderDAO.GetOrdersByCustomer(customerId));
+        }
+
         public async Task DeleteOrder(int id)
         {
             await OrderDAO.DeleteOrder(id);

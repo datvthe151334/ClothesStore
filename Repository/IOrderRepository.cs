@@ -11,6 +11,7 @@ namespace Repository
     {
         Task<List<OrderDTO>> GetOrders(DateTime? startDate, DateTime? endDate);
         Task<OrderDTO> GetOrderById(int id);
+        Task<List<OrderDictionaryDTO>> GetOrdersByCustomer(string customerId);
         Task DeleteOrder(int id);
     }
 }

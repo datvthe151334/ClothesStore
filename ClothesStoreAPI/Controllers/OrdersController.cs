@@ -19,7 +19,6 @@ namespace ClothesStoreAPI.Controllersorder
         }
 
         //GET: api/Orders
-
         [HttpGet]
         public async Task<IActionResult> GetOrders(DateTime? startDate, DateTime? endDate)
         {
@@ -44,6 +43,24 @@ namespace ClothesStoreAPI.Controllersorder
             try
             {
                 return StatusCode(200, await repository.GetOrderById(id));
+            }
+            catch (ApplicationException ae)
+            {
+                return StatusCode(400, ae.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        //GET: api/Orders/getDictionaryOrders
+        [HttpGet("getOrdersByCustomer")]
+        public async Task<IActionResult> GetDictionaryOrderByCustomer(string customerId)
+        {
+            try
+            {
+                return StatusCode(200, await repository.GetOrdersByCustomer(customerId));
             }
             catch (ApplicationException ae)
             {
