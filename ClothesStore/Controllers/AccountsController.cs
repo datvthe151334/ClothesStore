@@ -28,36 +28,44 @@ namespace ClothesStore.Controllers
         [HttpGet]
         public async Task<IActionResult> Profile(string? alertMessage)       
         {
-            
-            var mySessionValue = HttpContext.Session.GetString("user");
-            var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
 
-            // Truy cập customerId của đối tượng JSON
-            var customerId = userObject.account.customerId;
-            //Get InfomationAccountGeneral
-            HttpResponseMessage infoAccountsResponse = await client.GetAsync(DefaultAccountsApiUrl + "/GetInfoCustomerById/" + customerId);
-            string strinfoAccountsGeneral = await infoAccountsResponse.Content.ReadAsStringAsync();
-
-            //Get CategoryGeneral
-            HttpResponseMessage categoryGeneralResponse = await client.GetAsync(DefaultCategoryApiUrl + "/getCategoryGeneral");
-            string strCategoryGeneral = await categoryGeneralResponse.Content.ReadAsStringAsync();
-
-            //Get Categories
-            HttpResponseMessage categoriesResponse = await client.GetAsync(DefaultCategoryApiUrl);
-            string strCategories = await categoriesResponse.Content.ReadAsStringAsync();
-
-            var options = new JsonSerializerOptions
+            if (HttpContext.Session.GetString("user") == null)
             {
-                PropertyNameCaseInsensitive = true
-            };
-            
-            List<string>? listCategoryGeneral = JsonConvert.DeserializeObject<List<string>>(strCategoryGeneral);
-            List<CategoryDTO>? listCategories = JsonConvert.DeserializeObject<List<CategoryDTO>>(strCategories);
-            AccountUpdateDTO? accInfo = JsonConvert.DeserializeObject<AccountUpdateDTO>(strinfoAccountsGeneral);
-            @ViewData["AlertMessage"] = alertMessage;
-            ViewBag.listCategories = listCategories;
-            ViewBag.listCategoryGeneral = listCategoryGeneral;
-            return View(accInfo);
+                return RedirectToAction("NotFound", "Accounts");
+            }
+            else
+            {
+                var mySessionValue = HttpContext.Session.GetString("user");
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                var customerId = userObject.account.customerId;
+                //Get InfomationAccountGeneral
+                HttpResponseMessage infoAccountsResponse = await client.GetAsync(DefaultAccountsApiUrl + "/GetInfoCustomerById/" + customerId);
+                string strinfoAccountsGeneral = await infoAccountsResponse.Content.ReadAsStringAsync();
+                if (infoAccountsResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("NotFound", "Accounts");
+                }
+                //Get CategoryGeneral
+                HttpResponseMessage categoryGeneralResponse = await client.GetAsync(DefaultCategoryApiUrl + "/getCategoryGeneral");
+                string strCategoryGeneral = await categoryGeneralResponse.Content.ReadAsStringAsync();
+
+                //Get Categories
+                HttpResponseMessage categoriesResponse = await client.GetAsync(DefaultCategoryApiUrl);
+                string strCategories = await categoriesResponse.Content.ReadAsStringAsync();
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                List<string>? listCategoryGeneral = JsonConvert.DeserializeObject<List<string>>(strCategoryGeneral);
+                List<CategoryDTO>? listCategories = JsonConvert.DeserializeObject<List<CategoryDTO>>(strCategories);
+                AccountUpdateDTO? accInfo = JsonConvert.DeserializeObject<AccountUpdateDTO>(strinfoAccountsGeneral);
+                @ViewData["AlertMessage"] = alertMessage;
+                ViewBag.listCategories = listCategories;
+                ViewBag.listCategoryGeneral = listCategoryGeneral;
+                return View(accInfo);
+            }
         }
         [HttpPost]
         public IActionResult UpdateCustomer(AccountUpdateDTO req)
@@ -65,6 +73,10 @@ namespace ClothesStore.Controllers
 
             var conn = "api/Accounts/updateProfile";
             var Res = PostData(conn, JsonConvert.SerializeObject(req));
+            if (Res.Result.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                return RedirectToAction("NotFound", "Accounts");
+            }
             if (!Res.Result.IsSuccessStatusCode) return RedirectToAction("Profile", "Accounts", new { @alertMessage = "Update failed!" });
             return RedirectToAction("Profile", "Accounts", new { @signUpMessage = "Update successfully" });
         }

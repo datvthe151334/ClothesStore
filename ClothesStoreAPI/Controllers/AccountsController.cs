@@ -50,7 +50,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //GET: api/Accounts
-        [Authorize(Policy = "EmpOnly")]
+ 
         [HttpGet]
         public async Task<IActionResult> GetAccounts(string? searchString)
         {
@@ -88,6 +88,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //GET: api/Accounts/email
+
         [AllowAnonymous]
         [HttpPost("FindByEmail")]
         public async Task<IActionResult> GetAccountByEmail(string email)
@@ -127,6 +128,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //Reset Password
+        [AllowAnonymous]
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> Get(string? email)
         {
@@ -163,7 +165,7 @@ namespace ClothesStoreAPI.Controllers
             if (isSave) return Ok(isSave);
             return Conflict();
         }
-        [AllowAnonymous]
+        
         [HttpPost]
         [Route("updateProfile")]
         public async Task<IActionResult> updateProfile(AccountUpdateDTO req)
@@ -173,7 +175,21 @@ namespace ClothesStoreAPI.Controllers
             if (isSave) return Ok(isSave);
             return Conflict();
         }
-
+        [HttpPost]
+        [Route("refresh-token")]
+        public ActionResult<AccountInfoTokenDTO> RefreshToken(AccountInfoTokenDTO u)
+        {
+            var refreshToken = u.RefreshToken;
+            if (user.RefreshToken is null) return BadRequest();
+            if (!user.RefreshToken!.Equals(refreshToken)) return Unauthorized("Invalid Refresh Token.");
+            else if (user.TokenExpires < DateTime.Now) return Unauthorized("Token expired.");
+            string token = JWTConfig.CreateToken(user, configuration);
+            user.AccessToken = token;
+            var newRefreshToken = JWTConfig.GenerateRefreshToken();
+            SetRefreshToken(newRefreshToken);
+            return Ok(user);
+        }
+    
         [HttpGet("GetInfoCustomerById/{id}")]
         public async Task<IActionResult> GetInfoCustomerById(string id)
         {

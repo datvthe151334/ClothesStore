@@ -1,6 +1,7 @@
 ﻿using BusinessObject.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
@@ -20,7 +21,8 @@ namespace ClothesStore.Controllers
             client.DefaultRequestHeaders.Accept.Add(contentType);
             DefaultAccountApiUrl = "https://localhost:7059/api/Accounts";
         }
-             
+
+                             
         
         public async Task<IActionResult> Index(int? PageNum, string? searchString)
         {
@@ -31,16 +33,19 @@ namespace ClothesStore.Controllers
             //Get Accounts
             HttpResponseMessage accountsResponse = await client.GetAsync(DefaultAccountApiUrl + "?searchString=" + searchString);
             string strAccounts = await accountsResponse.Content.ReadAsStringAsync();
-              if (accountsResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            /* if (accountsResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+           {
+               return RedirectToAction("NotFound", "Accounts");
+           }*/
+
+            var mySessionValue = HttpContext.Session.GetString("user");
+            var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+            var customerId = userObject.account.customerId;
+            if(customerId != null)
             {
                 return RedirectToAction("NotFound", "Accounts");
             }
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            List<AccountDTO>? listAccounts = JsonSerializer.Deserialize<List<AccountDTO>>(strAccounts, options);
+            List<AccountDTO>? listAccounts = JsonConvert.DeserializeObject<List<AccountDTO>>(strAccounts);
             int Total = listAccounts.Count;
 
             //Lay thong tin cho Pager
@@ -63,8 +68,12 @@ namespace ClothesStore.Controllers
 
         public async Task<IActionResult> Delete(int? id)
         {
-            await client.DeleteAsync(DefaultAccountApiUrl + "/" + id);
-
+            
+            var accountsDeleteResponse = await client.DeleteAsync(DefaultAccountApiUrl + "/" + id);
+            if (accountsDeleteResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                return RedirectToAction("NotFound", "Accounts");
+            }
             return RedirectToAction(nameof(Index));
         }
     }
