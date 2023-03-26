@@ -1,16 +1,14 @@
-﻿using System;
+﻿using BusinessObject.Models;
+using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace BusinessObject.Models
+namespace BusinessObject.DTO
 {
-    public partial class Order
+    public class OrderCreateUpdateDTO
     {
-        public Order()
-        {
-            OrderDetails = new HashSet<OrderDetail>();
-        }
-
         public int OrderId { get; set; }
         public string? CustomerId { get; set; }
         public int? EmployeeId { get; set; }
@@ -24,9 +22,6 @@ namespace BusinessObject.Models
         public string? ShipRegion { get; set; }
         public string? ShipPostalCode { get; set; }
         public string? ShipCountry { get; set; }
-
-        public virtual Customer? Customer { get; set; }
-        public virtual Employee? Employee { get; set; }
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public List<OrderDetailCreateUpdateDTO> OrderDetails { get; set; }
     }
 }

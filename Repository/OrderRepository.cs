@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessObject.DTO;
+using BusinessObject.Models;
 using DataAccess;
 using System;
 using System.Collections.Generic;
@@ -29,8 +30,13 @@ namespace Repository
 
         public async Task<List<OrderDictionaryDTO>> GetOrdersByCustomer(string customerId)
         {
-            var x = _mapper.Map<List<OrderDictionaryDTO>>(await OrderDAO.GetOrdersByCustomer(customerId));
             return _mapper.Map<List<OrderDictionaryDTO>> (await OrderDAO.GetOrdersByCustomer(customerId));
+        }
+
+        public async Task<OrderCreateUpdateDTO> CreateOrder(OrderCreateUpdateDTO orderDTO)
+        {
+            var order = _mapper.Map<Order>(orderDTO);
+            return _mapper.Map<OrderCreateUpdateDTO>(await OrderDAO.CreateOrder(order));
         }
 
         public async Task DeleteOrder(int id)

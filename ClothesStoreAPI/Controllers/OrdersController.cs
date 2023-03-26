@@ -4,6 +4,7 @@ using ClothesStoreAPI.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Repository;
+using BusinessObject.DTO;
 
 namespace ClothesStoreAPI.Controllersorder
 {
@@ -61,6 +62,24 @@ namespace ClothesStoreAPI.Controllersorder
             try
             {
                 return StatusCode(200, await repository.GetOrdersByCustomer(customerId));
+            }
+            catch (ApplicationException ae)
+            {
+                return StatusCode(400, ae.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        //POST
+        [HttpPost]
+        public async Task<IActionResult> CreateOrder([FromBody] OrderCreateUpdateDTO orderDTO)
+        {
+            try
+            {
+                return StatusCode(204, await repository.CreateOrder(orderDTO));
             }
             catch (ApplicationException ae)
             {

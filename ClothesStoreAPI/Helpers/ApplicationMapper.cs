@@ -71,6 +71,11 @@ namespace ClothesStoreAPI.Helpers
                 .ForMember(dest => dest.OrderDetails,
                 opt => opt.MapFrom(src => src.OrderDetails));
 
+            CreateMap<Order, OrderCreateUpdateDTO>()
+                .ForMember(dest => dest.OrderDetails,
+                opt => opt.MapFrom(src => src.OrderDetails));
+            CreateMap<OrderCreateUpdateDTO, Order>();
+
             //OrderDetails Mapper
             CreateMap<OrderDetail, OrderDetailDTO>()
                 .ForMember(
@@ -80,6 +85,7 @@ namespace ClothesStoreAPI.Helpers
                     dest => dest.ProductPicture,
                     opt => opt.MapFrom(src => src.Product!.Picture));
             CreateMap<OrderDTO, Order>();
+            CreateMap<OrderDetail, OrderDetailCreateUpdateDTO>().ReverseMap();
         }
     }
 }

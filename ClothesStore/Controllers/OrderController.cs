@@ -24,7 +24,7 @@ namespace ClothesStore.Controllers
             BaseUrl = "https://localhost:7059";
             this.configuration = configuration;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? alertMessage)
         {
             var mySessionValue = HttpContext.Session.GetString("user");
             var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
@@ -51,6 +51,7 @@ namespace ClothesStore.Controllers
             List<CategoryDTO>? listCategories = JsonConvert.DeserializeObject<List<CategoryDTO>>(strCategories);
             List<OrderDictionaryDTO>? listOrders = JsonConvert.DeserializeObject<List<OrderDictionaryDTO>>(strOrders);
 
+            ViewData["AlertMessage"] = alertMessage;
             ViewBag.listCategories = listCategories;
             ViewBag.listCategoryGeneral = listCategoryGeneral;
             return View(listOrders);

@@ -1,0 +1,126 @@
+﻿@using BusinessObject.DTO
+@model List<CartDTO>
+
+<div class="chit-chat-layer1">
+    <div class="col-md-12 col-lg-12">
+        <div class="work-progres">
+            <div class="chit-chat-heading">
+                <br />
+                <br />
+                <h3 style="margin-left: 30px">Cart</h3>
+                <br />
+                <br />
+            </div>
+            <div style="width:80%; margin-left:auto; margin-right:auto; border-style: groove; border-radius: 10px; margin-bottom:20px;">
+                <div style="background-color:#b8d9d0;">
+                    <h4 style="font-weight:bold;">Shopping Cart</h4>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Picture</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Amount</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td><img style="width:80px;height:100px" src="~/@Html.DisplayFor(modelItem => item.Product.Picture)" /></td>
+                                    <td>@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
+                                    <td>Quantity: @Html.DisplayFor(modelItem => item.Quantity)<br /><a style="font-weight:bold;" asp-controller="cart" asp-action="onclickaction" asp-route-productId="@item.Product.ProductId" asp-route-actionType="plus">+</a><span>&nbsp;&nbsp;&nbsp;</span><a style="font-weight:bold;" asp-controller="cart" asp-action="onclickaction" asp-route-productId="@item.Product.ProductId" asp-route-actionType="minus">-</a></td>
+                                    <td>Amount: $@item.Product.UnitPrice</td>
+                                    <td><a asp-controller="cart" asp-action="onclickaction" asp-route-productId="@item.Product.ProductId" asp-route-actionType="remove">Remove</a></td>
+                                </tr>
+                            }
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>Total: $@ViewData["total"]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <form action="~/cart/order" method="post">
+                    <div id="customer-info">
+                        @if (@ViewBag.customer != null)
+                        {
+                            <div id="customer-info-content">
+                                <h3>CUSTOMER INFORMATION:</h3>
+                                <div id="customer-info-detail">
+                                    <div id="customer-info-left">
+                                        <input type="text" placeholder="Company name *" value="@ViewBag.customer.companyName"  readonly/><br />
+                                        <input type="text" placeholder="Contact name *" value="@ViewBag.customer.contactName" readonly/><br />
+                                    </div>
+                                    <div id="customer-info-right">
+                                        <input type="text" placeholder="Contact title *" value="@ViewBag.customer.contactTitle" readonly/><br />
+                                        <input type="text" placeholder="Address *" value="@ViewBag.customer.address" readonly/><br />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div id="cart-order">
+                        <input type="submit" value="ORDER" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"> </div>
+</div>
+
+<style>
+    #customer-info {
+        width: 92%;
+        margin: 10px auto;
+    }
+
+    #customer-info-content {
+        display: inline-flexbox;
+    }
+
+    #customer-info h3 {
+        width: 100%;
+        line-height: 50px;
+    }
+
+    #customer-info-detail {
+        display: flex;
+    }
+
+    #customer-info-left {
+        width: 50%;
+    }
+
+    #customer-info-right {
+        width: 50%;
+    }
+
+    #customer-info-detail input[type="text"] {
+        line-height: 30px;
+        margin-bottom: 10px;
+        width: 96%;
+    }
+
+    #customer-info-payment input[type="radio"] {
+        border-color: #ee2e24;
+    }
+
+    #cart-order {
+        text-align: right;
+    }
+
+        #cart-order input {
+            width: 22%;
+            margin-right: 5%;
+            margin-bottom: 50px;
+            font-weight: bold;
+        }
+</style>

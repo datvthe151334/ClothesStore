@@ -72,6 +72,7 @@ namespace DataAccess
             {
                 using (var context = new ClothesStoreDBContext())
                 {
+                    order.OrderDetails.ToList().ForEach(x => x.Product = null);
                     await context.Orders.AddAsync(order);
                     await context.SaveChangesAsync();
 
