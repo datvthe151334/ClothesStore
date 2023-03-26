@@ -1,4 +1,6 @@
 ﻿using BusinessObject.DTO;
+using ClosedXML.Excel;
+using ClothesStoreAPI.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -66,8 +68,29 @@ namespace ClothesStore.Controllers
 
         public async Task<IActionResult> exportExcel(int? PageNum, DateTime? startDate, DateTime? endDate)
         {
-            await client.GetAsync(DefaultOrderApiUrl + "/exportExcel?startDate=" + startDate + "&endDate=" + endDate);
+            HttpResponseMessage listOrdersResponse = await client.GetAsync(DefaultOrderApiUrl + "/exportExcel?startDate=" + startDate + "&endDate=" + endDate);
+            string strListOrders = await listOrdersResponse.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
 
+            List<OrderDTO>? listOrders = JsonSerializer.Deserialize<List<OrderDTO>>(strListOrders, options);
+            using (var workbook = new XLWorkbook())
+            {
+                ExcelConfiguration.exportOrder(listOrders, workbook);
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+
+                    return File(
+                        content,
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "orders.xlsx");
+                }
+            }
             return RedirectToAction("Index", "AdminOrder" , new { @PageNum = PageNum, @startDate = startDate, @endDate = endDate });
         }
     }

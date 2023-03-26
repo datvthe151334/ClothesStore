@@ -173,23 +173,7 @@ namespace ClothesStoreAPI.Controllers
         [HttpGet("exportExcel")]
         public async Task<IActionResult> Export(string? searchString, decimal? startPrice, decimal? endPrice)
         {
-            var listProducts = await repository.GetProducts(null, searchString, null, startPrice, endPrice, null);
-
-            using (var workbook = new XLWorkbook())
-            {
-                ExcelConfiguration.exportProduct(listProducts, workbook);
-
-                using (var stream = new MemoryStream())
-                {
-                    workbook.SaveAs(stream);
-                    var content = stream.ToArray();
-
-                    return File(
-                        content,
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        "products.xlsx");
-                }
-            }
+            return StatusCode(200, await repository.GetProducts(null, searchString, null, startPrice, endPrice,null));
         }
 
         //Export: api/products/importExcel

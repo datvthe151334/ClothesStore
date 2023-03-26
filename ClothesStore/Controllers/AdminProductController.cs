@@ -1,7 +1,10 @@
 ﻿using BusinessObject.DTO;
+using ClosedXML.Excel;
+using ClothesStoreAPI.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Options;
 using System.Data;
 using System.Net.Http.Headers;
 using System.Text;
@@ -180,7 +183,28 @@ namespace ClothesStore.Controllers
 
         public async Task<IActionResult> exportExcel(int? PageNum, string? searchString, decimal? startPrice, decimal? endPrice)
         {
-            await client.GetAsync(DefaultProductApiUrl + "/exportExcel?searchString=" + searchString + "&endPrice=" + startPrice + "&endPrice=" + endPrice);
+            HttpResponseMessage productListResponse = await client.GetAsync(DefaultProductApiUrl + "/exportExcel?searchString=" + searchString + "&endPrice=" + startPrice + "&endPrice=" + endPrice);
+            string strListProduct = await productListResponse.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            List<ProductDTO>? listProducts = JsonSerializer.Deserialize<List<ProductDTO>>(strListProduct, options);
+            using (var workbook = new XLWorkbook())
+            {
+                ExcelConfiguration.exportProduct(listProducts, workbook);
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+
+                    return File(
+                        content,
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "products.xlsx");
+                }
+            }
 
             return RedirectToAction("Index", "AdminProduct", new { @PageNum = PageNum, @searchString = searchString, @startPrice = startPrice, @endPrice = endPrice });
         }

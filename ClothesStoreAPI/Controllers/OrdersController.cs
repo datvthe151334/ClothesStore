@@ -115,9 +115,9 @@ namespace ClothesStoreAPI.Controllersorder
         [HttpGet("exportExcel")]
         public async Task<IActionResult> Export(DateTime? startDate, DateTime? endDate)
         {
-            var listOrders = await repository.GetOrders(startDate, endDate);
+            return StatusCode(200,await repository.GetOrders(startDate, endDate));
 
-            using (var workbook = new XLWorkbook())
+           /* using (var workbook = new XLWorkbook())
             {
                 ExcelConfiguration.exportOrder(listOrders, workbook);
 
@@ -131,7 +131,8 @@ namespace ClothesStoreAPI.Controllersorder
                         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                         "orders.xlsx");
                 }
-            }
+            }*/
+           
         }
     }
 }
