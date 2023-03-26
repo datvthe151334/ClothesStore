@@ -39,12 +39,12 @@ namespace ClothesStoreAPI.Controllers
 
         //GET: api/Products/text
         [HttpGet("FilterProduct")] 
-        public async Task<IActionResult> GetProducts(int? categoryId , string? text, string? sortType, decimal? startPrice, decimal? endPrice)
+        public async Task<IActionResult> GetProducts(int? categoryId , string? text, string? sortType, decimal? startPrice, decimal? endPrice, bool? isAdmin)
         {
             try
             {
                 
-                return StatusCode(200, await repository.GetProducts(categoryId, text, sortType, startPrice, endPrice));
+                return StatusCode(200, await repository.GetProducts(categoryId, text, sortType, startPrice, endPrice, isAdmin));
             }
             catch (ApplicationException ae)
             {
@@ -173,7 +173,7 @@ namespace ClothesStoreAPI.Controllers
         [HttpGet("exportExcel")]
         public async Task<IActionResult> Export(string? searchString, decimal? startPrice, decimal? endPrice)
         {
-            var listProducts = await repository.GetProducts(null, searchString, null, startPrice, endPrice);
+            var listProducts = await repository.GetProducts(null, searchString, null, startPrice, endPrice, null);
 
             using (var workbook = new XLWorkbook())
             {

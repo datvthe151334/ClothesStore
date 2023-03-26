@@ -17,7 +17,7 @@ namespace DataAccess
             {
                 using (var context = new ClothesStoreDBContext())
                 {
-                    listProducts = await context.Products.Include(x => x.Category).ToListAsync();
+                    listProducts = await context.Products.Where(x => x.IsActive == true).Include(x => x.Category).ToListAsync();
                 }
             }
             catch (Exception ex)
@@ -27,7 +27,7 @@ namespace DataAccess
             return listProducts;
         }
 
-        public static async Task<List<Product>> GetProducts(int? categoryId, string? text,string? sortType, decimal? startPrice, decimal? endPrice)
+        public static async Task<List<Product>> GetProducts(int? categoryId, string? text,string? sortType, decimal? startPrice, decimal? endPrice, bool? isAdmin)
         {
             var listProducts = new List<Product>();
 /*            if (string.IsNullOrEmpty(text))
@@ -69,6 +69,8 @@ namespace DataAccess
                         listProducts = listProducts.Where(x => x.UnitPrice >= startPrice).ToList();
                     if (endPrice != null)
                         listProducts = listProducts.Where(x => x.UnitPrice <= endPrice).ToList();
+                    if(isAdmin != true)
+                        listProducts = listProducts.Where(x => x.IsActive == true).ToList();
                 }
             }
             catch (Exception ex)
@@ -109,7 +111,7 @@ namespace DataAccess
             {
                 using (var context = new ClothesStoreDBContext())
                 {
-                    listProducts = await context.Products.Where(x => x.CategoryId == catId).Include(x => x.Category).ToListAsync();
+                    listProducts = await context.Products.Where(x => x.CategoryId == catId && x.IsActive == true).Include(x => x.Category).ToListAsync();
                 }
             }
             catch (Exception ex)
@@ -126,7 +128,7 @@ namespace DataAccess
             {
                 using (var context = new ClothesStoreDBContext())
                 {
-                    listProducts = await context.Products.Where(x => x.Category.CategoryGeneral == catGeneral).Include(x => x.Category).ToListAsync();
+                    listProducts = await context.Products.Where(x => x.Category.CategoryGeneral == catGeneral && x.IsActive == true).Include(x => x.Category).ToListAsync();
                 }
             }
             catch (Exception ex)

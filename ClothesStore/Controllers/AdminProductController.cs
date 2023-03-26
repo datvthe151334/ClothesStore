@@ -34,7 +34,7 @@ namespace ClothesStore.Controllers
             int PageSize = Convert.ToInt32(configuration.GetValue<string>("AppSettings:PageSize"));
 
             //Get Products
-            HttpResponseMessage productsResponse = await client.GetAsync(DefaultProductApiUrl + "/FilterProduct?text=" + searchString + "&startPrice=" + startPrice + "&endPrice=" + endPrice);
+            HttpResponseMessage productsResponse = await client.GetAsync(DefaultProductApiUrl + "/FilterProduct?text=" + searchString + "&startPrice=" + startPrice + "&endPrice=" + endPrice + "&isAdmin=true");
             string strProducts = await productsResponse.Content.ReadAsStringAsync();
 
             var options = new JsonSerializerOptions

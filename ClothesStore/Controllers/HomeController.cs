@@ -241,6 +241,7 @@ namespace ClothesStore.Controllers
         {
             Response.Cookies.Delete("accessToken");
             Response.Cookies.Delete("refreshToken");
+            HttpContext.Session.Remove("CartSession");
             return RedirectToAction("index");
         }
         
