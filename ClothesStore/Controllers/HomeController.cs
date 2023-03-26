@@ -124,7 +124,7 @@ namespace ClothesStore.Controllers
         
         public async Task<IActionResult> Index([FromQuery] string? CategoryGeneral, string? alertMessage)
         {
-            var contactName = "";
+            
             if (CategoryGeneral == null) CategoryGeneral = "men";
             //Get Products
             HttpResponseMessage productsResponse = await client.GetAsync(DefaultProductApiUrl);
@@ -168,16 +168,7 @@ namespace ClothesStore.Controllers
             ViewBag.listMenProducts = listMenProducts.OrderByDescending(x => x.ProductId).Take(12).ToList();
             ViewBag.listWomenProducts = listWomenProducts.OrderByDescending(x => x.ProductId).Take(12).ToList();
             ViewBag.listBabyProducts = listBabyProducts.OrderByDescending(x => x.ProductId).Take(12).ToList();
-            var mySessionValue = HttpContext.Session.GetString("user");
-            if (mySessionValue == null)
-            {
-                contactName = "Chưa đăng nhập";
-            }
-            else
-            {
-                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
-                contactName = userObject.account.customer.contactName;
-            }
+            
             
             ViewBag.listCategories = listCategories;
             ViewBag.listCategoryGeneral = listCategoryGeneral;
@@ -185,7 +176,6 @@ namespace ClothesStore.Controllers
             ViewData["CurCatGeneral"] = CategoryGeneral;
             /* ViewData["TotalCustomer"] = listCustomers.Count;*/
             ViewData["AlertMessage"] = alertMessage;
-            @ViewData["Name"] = contactName;
             return View();
         }
 

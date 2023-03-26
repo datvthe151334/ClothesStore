@@ -18,6 +18,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <link href="~/css/style.css" rel="stylesheet" type="text/css" media="all" />
 <link href="~/css/font-awesome.css" rel="stylesheet" asp-append-version="true"> 
 <link href="~/css/easy-responsive-tabs.css" rel='stylesheet' type='text/css' asp-append-version="true" />
+
 <!-- //for bootstrap working -->
 <link href="//fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800" rel="stylesheet">
 <link href='//fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,900,900italic,700italic' rel='stylesheet' type='text/css'>
@@ -84,14 +85,19 @@ input[type="file"]{
 		<!-- header-bot -->
 		<div class="col-md-4 agileits-social top_content">
 						<ul class="social-nav model-3d-0 footer-social w3_agile_social">
-					@if (Context.Request.Cookies["AccessToken"] is not null)
+					@if (Context.Request.Cookies["AccessToken"] is not null && Context.Session.GetString("user") is not null)
 					{
-						
-																	   <li class="share">Xin chào, @ViewData["Name"]  </li>
-																	<li><a href="#" class="facebook">
-																		  <div ><img  src="~/images/b2.jpg" style="width:40px;margin-bottom:30px;"></div>
-																		  <div class="back"><img  src="~/images/b2.jpg" style="width:40px;margin-bottom:30px;"></div>
-																		  </a></li>
+							var userSession = Context.Session.GetString("user");
+						if (!string.IsNullOrEmpty(userSession))
+						{
+							dynamic userData = Newtonsoft.Json.JsonConvert.DeserializeObject(userSession);
+							string contactName = userData.account.customer.contactName;
+							<li class="share">Xin chào, @contactName  </li>
+							<li><a href="#" class="facebook">
+									<div ><img  src="~/images/b2.jpg" style="width:40px;margin-bottom:30px;"></div>
+									<div class="back"><img  src="~/images/b2.jpg" style="width:40px;margin-bottom:30px;"></div>
+								</a></li>
+						}
 
 					}
 														</ul>

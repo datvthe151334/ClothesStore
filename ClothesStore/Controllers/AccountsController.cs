@@ -28,7 +28,7 @@ namespace ClothesStore.Controllers
         [HttpGet]
         public async Task<IActionResult> Profile(string? alertMessage)       
         {
-            var contactName = "";
+            
             var mySessionValue = HttpContext.Session.GetString("user");
             var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
 
@@ -50,18 +50,10 @@ namespace ClothesStore.Controllers
             {
                 PropertyNameCaseInsensitive = true
             };
-            if (mySessionValue == null)
-            {
-                contactName = "Chưa đăng nhập";
-            }
-            else
-            {
-                contactName = userObject.account.customer.contactName;
-            }
+            
             List<string>? listCategoryGeneral = JsonConvert.DeserializeObject<List<string>>(strCategoryGeneral);
             List<CategoryDTO>? listCategories = JsonConvert.DeserializeObject<List<CategoryDTO>>(strCategories);
             AccountUpdateDTO? accInfo = JsonConvert.DeserializeObject<AccountUpdateDTO>(strinfoAccountsGeneral);
-            @ViewData["Name"] = contactName;
             @ViewData["AlertMessage"] = alertMessage;
             ViewBag.listCategories = listCategories;
             ViewBag.listCategoryGeneral = listCategoryGeneral;
@@ -70,23 +62,11 @@ namespace ClothesStore.Controllers
         [HttpPost]
         public IActionResult UpdateCustomer(AccountUpdateDTO req)
         {
-            
+
             var conn = "api/Accounts/updateProfile";
             var Res = PostData(conn, JsonConvert.SerializeObject(req));
             if (!Res.Result.IsSuccessStatusCode) return RedirectToAction("Profile", "Accounts", new { @alertMessage = "Update failed!" });
-            var contactName = "";
-            var mySessionValue = HttpContext.Session.GetString("user");
-            if (mySessionValue == null)
-            {
-                contactName = "Chưa đăng nhập";
-            }
-            else
-            {
-                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
-                contactName = userObject.account.customer.contactName;
-            }
-            @ViewData["Name"] = contactName;
-            return RedirectToAction("Profile", "Accounts", new { @alertMessage = "Update successfully!" });
+            return RedirectToAction("Profile", "Accounts", new { @signUpMessage = "Update successfully" });
         }
 
         public async Task<HttpResponseMessage> PostData(string targerAddress, string content)
@@ -106,5 +86,33 @@ namespace ClothesStore.Controllers
             var Response = await client.PostAsync(targerAddress, new StringContent(content, Encoding.UTF8, "application/json"));
             return Response;
         }
+
+        public async Task<IActionResult> NotFound()
+        {
+           
+
+            //Get CategoryGeneral
+            HttpResponseMessage categoryGeneralResponse = await client.GetAsync(DefaultCategoryApiUrl + "/getCategoryGeneral");
+            string strCategoryGeneral = await categoryGeneralResponse.Content.ReadAsStringAsync();
+
+            //Get Categories
+            HttpResponseMessage categoriesResponse = await client.GetAsync(DefaultCategoryApiUrl);
+            string strCategories = await categoriesResponse.Content.ReadAsStringAsync();
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            List<string>? listCategoryGeneral = JsonConvert.DeserializeObject<List<string>>(strCategoryGeneral);
+            List<CategoryDTO>? listCategories = JsonConvert.DeserializeObject<List<CategoryDTO>>(strCategories);
+            
+            
+            ViewBag.listCategories = listCategories;
+            ViewBag.listCategoryGeneral = listCategoryGeneral;
+            return View();
+        }
+
+       
     }
 }

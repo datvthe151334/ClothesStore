@@ -20,16 +20,21 @@ namespace ClothesStore.Controllers
             client.DefaultRequestHeaders.Accept.Add(contentType);
             DefaultAccountApiUrl = "https://localhost:7059/api/Accounts";
         }
+             
         
         public async Task<IActionResult> Index(int? PageNum, string? searchString)
         {
+            
             if (PageNum <= 0 || PageNum is null) PageNum = 1;
             int PageSize = Convert.ToInt32(configuration.GetValue<string>("AppSettings:PageSize"));
 
             //Get Accounts
             HttpResponseMessage accountsResponse = await client.GetAsync(DefaultAccountApiUrl + "?searchString=" + searchString);
             string strAccounts = await accountsResponse.Content.ReadAsStringAsync();
-
+              if (accountsResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                return RedirectToAction("NotFound", "Accounts");
+            }
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
