@@ -137,6 +137,7 @@ namespace ClothesStore.Controllers
         public async Task<IActionResult> Index([FromQuery] string? CategoryGeneral, string? alertMessage)
         {
 
+
             if (CategoryGeneral == null) CategoryGeneral = "men";
             //Get Products
             HttpResponseMessage productsResponse = await client.GetAsync(DefaultProductApiUrl);
