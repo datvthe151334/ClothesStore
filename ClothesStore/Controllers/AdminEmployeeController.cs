@@ -1,5 +1,6 @@
 ﻿using BusinessObject.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
@@ -22,6 +23,20 @@ namespace ClothesStore.Controllers
 
         public async Task<IActionResult> Index(int? PageNum, string? searchString)
         {
+            var mySessionValue = HttpContext.Session.GetString("user");
+            if (mySessionValue == null)
+            {
+                return RedirectToAction("NotFound", "Accounts");
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                var customerId = userObject.account.customerId;
+                if (customerId != null || mySessionValue == null)
+                {
+                    return RedirectToAction("NotFound", "Accounts");
+                }
+            }
             if (PageNum <= 0 || PageNum is null) PageNum = 1;
             int PageSize = Convert.ToInt32(configuration.GetValue<string>("AppSettings:PageSize"));
 
@@ -29,12 +44,9 @@ namespace ClothesStore.Controllers
             HttpResponseMessage employeesResponse = await client.GetAsync(DefaultEmployeeApiUrl + "?searchString=" + searchString);
             string strEmployees = await employeesResponse.Content.ReadAsStringAsync();
 
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
+            
 
-            List<EmployeeDTO>? listEmployees = JsonSerializer.Deserialize<List<EmployeeDTO>>(strEmployees, options);
+            List<EmployeeDTO>? listEmployees = JsonConvert.DeserializeObject<List<EmployeeDTO>>(strEmployees);
             int Total = listEmployees.Count;
 
             //Lay thong tin cho Pager

@@ -1,5 +1,6 @@
 ﻿using BusinessObject.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -23,6 +24,20 @@ namespace ClothesStore.Controllers
 
         public async Task<IActionResult> Index(int? PageNum, string? searchString)
         {
+            var mySessionValue = HttpContext.Session.GetString("user");
+            if (mySessionValue == null)
+            {
+                return RedirectToAction("NotFound", "Accounts");
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                var customerId = userObject.account.customerId;
+                if (customerId != null || mySessionValue == null)
+                {
+                    return RedirectToAction("NotFound", "Accounts");
+                }
+            }
             if (PageNum <= 0 || PageNum is null) PageNum = 1;
             int PageSize = Convert.ToInt32(configuration.GetValue<string>("AppSettings:PageSize"));
 
@@ -30,12 +45,8 @@ namespace ClothesStore.Controllers
             HttpResponseMessage customersResponse = await client.GetAsync(DefaultCustomerApiUrl + "?searchString=" + searchString);
             string strCustomers = await customersResponse.Content.ReadAsStringAsync();
 
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
 
-            List<CustomerDTO>? listCustomers = JsonSerializer.Deserialize<List<CustomerDTO>>(strCustomers, options);
+            List<CustomerDTO>? listCustomers = JsonConvert.DeserializeObject<List<CustomerDTO>>(strCustomers);
             int Total = listCustomers.Count;
 
             //Lay thong tin cho Pager
@@ -59,6 +70,20 @@ namespace ClothesStore.Controllers
         // GET
         public async Task<ActionResult> Create()
         {
+            var mySessionValue = HttpContext.Session.GetString("user");
+            if (mySessionValue == null)
+            {
+                return RedirectToAction("NotFound", "Accounts");
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                var customerId = userObject.account.customerId;
+                if (customerId != null || mySessionValue == null)
+                {
+                    return RedirectToAction("NotFound", "Accounts");
+                }
+            }
             return View();
         }
 
@@ -67,7 +92,21 @@ namespace ClothesStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(CustomerDTO customerDTO)
         {
-            var stringContent = new StringContent(JsonSerializer.Serialize<CustomerDTO>(customerDTO), Encoding.UTF8, "application/json");
+            var mySessionValue = HttpContext.Session.GetString("user");
+            if (mySessionValue == null)
+            {
+                return RedirectToAction("NotFound", "Accounts");
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                var customerId = userObject.account.customerId;
+                if (customerId != null || mySessionValue == null)
+                {
+                    return RedirectToAction("NotFound", "Accounts");
+                }
+            }
+            var stringContent = new StringContent(JsonConvert.SerializeObject(customerDTO), Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.PostAsync(DefaultCustomerApiUrl, stringContent);
 
             if (response.IsSuccessStatusCode)
@@ -86,12 +125,9 @@ namespace ClothesStore.Controllers
             HttpResponseMessage customerResponse = await client.GetAsync(DefaultCustomerApiUrl + "/" + id);
             string strCustomer = await customerResponse.Content.ReadAsStringAsync();
 
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
+           
 
-            CustomerDTO? customerDTO = JsonSerializer.Deserialize<CustomerDTO>(strCustomer, options);
+            CustomerDTO? customerDTO = JsonConvert.DeserializeObject<CustomerDTO>(strCustomer);
 
             return View(customerDTO);
         }
@@ -101,7 +137,7 @@ namespace ClothesStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(CustomerDTO customerDTO)
         {
-            var stringContent = new StringContent(JsonSerializer.Serialize<CustomerDTO>(customerDTO), Encoding.UTF8, "application/json");
+            var stringContent = new StringContent(JsonConvert.SerializeObject(customerDTO), Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.PutAsync(DefaultCustomerApiUrl, stringContent);
 
             if (response.IsSuccessStatusCode)

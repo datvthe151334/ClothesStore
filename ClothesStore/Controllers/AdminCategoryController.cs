@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -25,6 +26,20 @@ namespace ClothesStore.Controllers
 
         public async Task<IActionResult> Index(int? PageNum)
         {
+            var mySessionValue = HttpContext.Session.GetString("user");
+            if (mySessionValue == null)
+            {
+                return RedirectToAction("NotFound", "Accounts");
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                var customerId = userObject.account.customerId;
+                if (customerId != null || mySessionValue == null)
+                {
+                    return RedirectToAction("NotFound", "Accounts");
+                }
+            }
             if (PageNum <= 0 || PageNum is null) PageNum = 1;
             int PageSize = Convert.ToInt32(configuration.GetValue<string>("AppSettings:PageSize"));
 
@@ -32,12 +47,9 @@ namespace ClothesStore.Controllers
             HttpResponseMessage categoriesResponse = await client.GetAsync(DefaultCategoryApiUrl);
             string strCategories = await categoriesResponse.Content.ReadAsStringAsync();
 
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
+            
 
-            List<CategoryDTO>? listCategories = JsonSerializer.Deserialize<List<CategoryDTO>>(strCategories, options);
+            List<CategoryDTO>? listCategories = JsonConvert.DeserializeObject<List<CategoryDTO>>(strCategories);
             int Total = listCategories.Count;
 
             //Lay thong tin cho Pager
@@ -60,6 +72,20 @@ namespace ClothesStore.Controllers
         // GET
         public async Task<ActionResult> Create()
         {
+            var mySessionValue = HttpContext.Session.GetString("user");
+            if (mySessionValue == null)
+            {
+                return RedirectToAction("NotFound", "Accounts");
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                var customerId = userObject.account.customerId;
+                if (customerId != null || mySessionValue == null)
+                {
+                    return RedirectToAction("NotFound", "Accounts");
+                }
+            }
             List<string> listCategoryGeneral = await GetCategoryGeneralAsync();
             var sl = listCategoryGeneral.Select(s => new SelectListItem { Text = s, Value = s }).ToList();
 
@@ -70,12 +96,25 @@ namespace ClothesStore.Controllers
 
 		//POST: product/create
 		[HttpPost]
-        [Authorize(Roles = "1")]
 		[ValidateAntiForgeryToken]
         
 		public async Task<ActionResult> Create(CategoryDTO categoryDTO)
 		{
-			var stringContent = new StringContent(JsonSerializer.Serialize<CategoryDTO>(categoryDTO), Encoding.UTF8, "application/json");
+            var mySessionValue = HttpContext.Session.GetString("user");
+            if (mySessionValue == null)
+            {
+                return RedirectToAction("NotFound", "Accounts");
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                var customerId = userObject.account.customerId;
+                if (customerId != null || mySessionValue == null)
+                {
+                    return RedirectToAction("NotFound", "Accounts");
+                }
+            }
+            var stringContent = new StringContent(JsonConvert.SerializeObject(categoryDTO), Encoding.UTF8, "application/json");
 			HttpResponseMessage response = await client.PostAsync(DefaultCategoryApiUrl, stringContent);
 
             List<string> listCategoryGeneral = await GetCategoryGeneralAsync();
@@ -95,16 +134,23 @@ namespace ClothesStore.Controllers
         //GET
         public async Task<ActionResult> Edit(int id)
         {
-            HttpResponseMessage categoryResponse = await client.GetAsync(DefaultCategoryApiUrl + "/" + id);
-            string strCategory = await categoryResponse.Content.ReadAsStringAsync();
-
-            var options = new JsonSerializerOptions
+            var mySessionValue = HttpContext.Session.GetString("user");
+            if (mySessionValue == null)
             {
-                PropertyNameCaseInsensitive = true
-            };
-
-            CategoryDTO? categoryDTO = JsonSerializer.Deserialize<CategoryDTO>(strCategory, options);
-
+                return RedirectToAction("NotFound", "Accounts");
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                var customerId = userObject.account.customerId;
+                if (customerId != null || mySessionValue == null)
+                {
+                    return RedirectToAction("NotFound", "Accounts");
+                }
+            }
+            HttpResponseMessage categoryResponse = await client.GetAsync(DefaultCategoryApiUrl + "/" + id);
+            string strCategory = await categoryResponse.Content.ReadAsStringAsync();          
+            CategoryDTO? categoryDTO = JsonConvert.DeserializeObject<CategoryDTO>(strCategory);
             List<string> listCategoryGeneral = await GetCategoryGeneralAsync();
             var sl = listCategoryGeneral.Select(s => new SelectListItem { Text = s, Value = s }).ToList();
             ViewBag.sl = sl;
@@ -117,7 +163,21 @@ namespace ClothesStore.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<ActionResult> Edit(CategoryDTO categoryDTO)
 		{
-            var stringContent = new StringContent(JsonSerializer.Serialize<CategoryDTO>(categoryDTO), Encoding.UTF8, "application/json");
+            var mySessionValue = HttpContext.Session.GetString("user");
+            if (mySessionValue == null)
+            {
+                return RedirectToAction("NotFound", "Accounts");
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                var customerId = userObject.account.customerId;
+                if (customerId != null || mySessionValue == null)
+                {
+                    return RedirectToAction("NotFound", "Accounts");
+                }
+            }
+            var stringContent = new StringContent(JsonConvert.SerializeObject(categoryDTO), Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.PutAsync(DefaultCategoryApiUrl, stringContent);
 
             List<string> listCategoryGeneral = await GetCategoryGeneralAsync();
@@ -135,6 +195,20 @@ namespace ClothesStore.Controllers
         }
         public async Task<IActionResult> Delete(int? id)
         {
+            var mySessionValue = HttpContext.Session.GetString("user");
+            if (mySessionValue == null)
+            {
+                return RedirectToAction("NotFound", "Accounts");
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                var customerId = userObject.account.customerId;
+                if (customerId != null || mySessionValue == null)
+                {
+                    return RedirectToAction("NotFound", "Accounts");
+                }
+            }
             await client.DeleteAsync(DefaultCategoryApiUrl + "/" + id);
 
             return RedirectToAction(nameof(Index));
@@ -146,12 +220,9 @@ namespace ClothesStore.Controllers
             HttpResponseMessage categoryGeneralResponse = await client.GetAsync(DefaultCategoryApiUrl + "/getCategoryGeneral");
             string strCategoryGeneral = await categoryGeneralResponse.Content.ReadAsStringAsync();
 
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
+           
 
-            return JsonSerializer.Deserialize<List<string>>(strCategoryGeneral, options);
+            return JsonConvert.DeserializeObject<List<string>>(strCategoryGeneral);
         }
     }
 }

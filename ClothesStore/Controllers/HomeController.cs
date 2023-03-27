@@ -79,10 +79,7 @@ namespace ClothesStore.Controllers
         {
             var stringContent = new StringContent(System.Text.Json.JsonSerializer.Serialize<string>(email), Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.PostAsync(DefaultAccountsApiUrl + "/ResetPassword?email=" + email, stringContent);
-            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                return RedirectToAction("NotFound", "Accounts");
-            }
+            
             if (response.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index", "Home", new { @alertMessage = "Send mail successfully!" });
@@ -97,48 +94,49 @@ namespace ClothesStore.Controllers
                 us.Email = email;
                 us.Password = password;
                 var Res = PostData("api/Accounts/signin", JsonConvert.SerializeObject(us));
-        
-                /*var name = "";*/
 
-            if (!Res.Result.IsSuccessStatusCode)
+            var name = "";
+
+            /* if (!Res.Result.IsSuccessStatusCode)
+             {
+                 *//*return StatusCode(StatusCodes.Status500InternalServerError);*//*
+                 return RedirectToAction("Index", "Home", new { @alertMessage = "Login fail!" });
+
+             }
+             else
+             {*/
+
+            var user = JsonConvert.DeserializeObject<AccountInfoTokenDTO>(Res.Result.Content.ReadAsStringAsync().Result);
+
+            name = user.Name;
+
+            HttpContext.Session.SetString("user", Res.Result.Content.ReadAsStringAsync().Result);
+            HttpContext.Session.SetString("userIfNot", name);
+
+            validateToken(user!.AccessToken!.Replace("\"", ""));
+
+                Response.Cookies.Append("refreshToken", user.RefreshToken!, new CookieOptions
+                { Expires = user.TokenExpires, HttpOnly = true, SameSite = SameSiteMode.Strict });
+
+            if (user.Account.EmployeeId != null)
             {
-                /*return StatusCode(StatusCodes.Status500InternalServerError);*/
-                return RedirectToAction("Index", "Home", new { @alertMessage = "Login fail!" });
-
+                return RedirectToAction("Index", "AdminAccount", new { @alertMessage = "Login successfully!" });
             }
             else
             {
-
-                var user = JsonConvert.DeserializeObject<AccountInfoTokenDTO>(Res.Result.Content.ReadAsStringAsync().Result);
-                
-                 /*name = user.Name;*/
-
-                HttpContext.Session.SetString("user", Res.Result.Content.ReadAsStringAsync().Result);
-                
-                validateToken(user!.AccessToken!.Replace("\"", ""));
-
-                Response.Cookies.Append("refreshToken", user.RefreshToken!, new CookieOptions
-                { Expires = user.TokenExpires, HttpOnly = true, SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict });
-
-                if(user.Account.EmployeeId != null)
-                {
-                    return RedirectToAction("Index", "AdminAccount", new { @alertMessage = "Login successfully!" });
-                }
-                else
-                {
-                    return RedirectToAction("Index", "Home", new { @alertMessage = "Login successfully!" });
-                }
-
-
+                return RedirectToAction("Index", "Home", new { @alertMessage = "Login successfully!" });
             }
-            
+
+
+            /*}*/
+
 
         }
 
         
         public async Task<IActionResult> Index([FromQuery] string? CategoryGeneral, string? alertMessage)
         {
-            
+
             if (CategoryGeneral == null) CategoryGeneral = "men";
             //Get Products
             HttpResponseMessage productsResponse = await client.GetAsync(DefaultProductApiUrl);

@@ -50,7 +50,7 @@ namespace ClothesStoreAPI.Controllers
         }
 
         //GET: api/Accounts
- 
+        /*[Authorize(Policy = "EmpOnly")]*/
         [HttpGet]
         public async Task<IActionResult> GetAccounts(string? searchString)
         {

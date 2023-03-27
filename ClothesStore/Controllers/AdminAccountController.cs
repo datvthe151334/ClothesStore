@@ -39,11 +39,18 @@ namespace ClothesStore.Controllers
            }*/
 
             var mySessionValue = HttpContext.Session.GetString("user");
-            var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
-            var customerId = userObject.account.customerId;
-            if(customerId != null)
+            if (mySessionValue == null)
             {
                 return RedirectToAction("NotFound", "Accounts");
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                var customerId = userObject.account.customerId;
+                if (customerId != null || mySessionValue == null)
+                {
+                    return RedirectToAction("NotFound", "Accounts");
+                }
             }
             List<AccountDTO>? listAccounts = JsonConvert.DeserializeObject<List<AccountDTO>>(strAccounts);
             int Total = listAccounts.Count;
@@ -70,9 +77,23 @@ namespace ClothesStore.Controllers
         {
             
             var accountsDeleteResponse = await client.DeleteAsync(DefaultAccountApiUrl + "/" + id);
-            if (accountsDeleteResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            /*if (accountsDeleteResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return RedirectToAction("NotFound", "Accounts");
+            }*/
+            var mySessionValue = HttpContext.Session.GetString("user");
+            if (mySessionValue == null)
+            {
+                return RedirectToAction("NotFound", "Accounts");
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                var customerId = userObject.account.customerId;
+                if (customerId != null || mySessionValue == null)
+                {
+                    return RedirectToAction("NotFound", "Accounts");
+                }
             }
             return RedirectToAction(nameof(Index));
         }

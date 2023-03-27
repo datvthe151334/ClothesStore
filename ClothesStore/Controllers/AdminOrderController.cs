@@ -2,6 +2,7 @@
 using ClosedXML.Excel;
 using ClothesStoreAPI.Configuration;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
@@ -24,6 +25,20 @@ namespace ClothesStore.Controllers
 
         public async Task<IActionResult> Index(int? PageNum, DateTime? startDate, DateTime? endDate)
         {
+            var mySessionValue = HttpContext.Session.GetString("user");
+            if (mySessionValue == null)
+            {
+                return RedirectToAction("NotFound", "Accounts");
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                var customerId = userObject.account.customerId;
+                if (customerId != null || mySessionValue == null)
+                {
+                    return RedirectToAction("NotFound", "Accounts");
+                }
+            }
             if (PageNum <= 0 || PageNum is null) PageNum = 1;
             int PageSize = Convert.ToInt32(configuration.GetValue<string>("AppSettings:PageSize"));
 
@@ -31,12 +46,7 @@ namespace ClothesStore.Controllers
             HttpResponseMessage ordersResponse = await client.GetAsync(DefaultOrderApiUrl + "?startDate=" + startDate + "&endDate=" + endDate);
             string strOrders = await ordersResponse.Content.ReadAsStringAsync();
 
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            List<OrderDTO>? listOrders = JsonSerializer.Deserialize<List<OrderDTO>>(strOrders, options);
+            List<OrderDTO>? listOrders = JsonConvert.DeserializeObject<List<OrderDTO>>(strOrders);
             int Total = listOrders.Count;
 
             //Lay thong tin cho Pager
@@ -68,14 +78,24 @@ namespace ClothesStore.Controllers
 
         public async Task<IActionResult> exportExcel(int? PageNum, DateTime? startDate, DateTime? endDate)
         {
+            var mySessionValue = HttpContext.Session.GetString("user");
+            if (mySessionValue == null)
+            {
+                return RedirectToAction("NotFound", "Accounts");
+            }
+            else
+            {
+                var userObject = JsonConvert.DeserializeObject<dynamic>(mySessionValue);
+                var customerId = userObject.account.customerId;
+                if (customerId != null || mySessionValue == null)
+                {
+                    return RedirectToAction("NotFound", "Accounts");
+                }
+            }
             HttpResponseMessage listOrdersResponse = await client.GetAsync(DefaultOrderApiUrl + "/exportExcel?startDate=" + startDate + "&endDate=" + endDate);
             string strListOrders = await listOrdersResponse.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
 
-            List<OrderDTO>? listOrders = JsonSerializer.Deserialize<List<OrderDTO>>(strListOrders, options);
+            List<OrderDTO>? listOrders = JsonConvert.DeserializeObject<List<OrderDTO>>(strListOrders);
             using (var workbook = new XLWorkbook())
             {
                 ExcelConfiguration.exportOrder(listOrders, workbook);
