@@ -53,7 +53,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             @if (Context.Request.Cookies["AccessToken"] is null )
             {
                 <ul>
-                    <li> <a href="#" data-toggle="modal" data-target="#myModal"><i class="fa fa-unlock-alt" aria-hidden="true"></i> Sign In </a></li>
+                    @if (Context.Request.Cookies["RefreshToken"] is null)
+                    { 
+                            <li> <a href="#" data-toggle="modal" data-target="#myModal"><i class="fa fa-unlock-alt" aria-hidden="true"></i> Sign In </a></li>
+                    } else {
+                            <li> <a asp-action="SignIn"><i class="fa fa-unlock-alt" aria-hidden="true"></i> Sign In </a></li>
+                    }
                     <li> <a href="#" data-toggle="modal" data-target="#myModal2"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Sign Up </a></li>
                     <li><i class="fa fa-phone" aria-hidden="true"></i> Call : 01234567898</li>
                 </ul>
@@ -89,19 +94,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <ul class="social-nav model-3d-0 footer-social w3_agile_social">
                     @if (Context.Request.Cookies["AccessToken"] is not null)
                     {
-                        var userSession = Context.Session.GetString("user");
-                        if (!string.IsNullOrEmpty(userSession))
-                        {
-                            dynamic userData = Newtonsoft.Json.JsonConvert.DeserializeObject(userSession);
-                            string contactName = userData.account.customer.contactName;
-                            <li class="share">Xin chào, @contactName  </li>
-                            <li>
-                                <a href="#" class="facebook">
-                                    <div><img src="~/images/b2.jpg" style="width:40px;margin-bottom:30px;"></div>
-                                    <div class="back"><img src="~/images/b2.jpg" style="width:40px;margin-bottom:30px;"></div>
-                                </a>
-                            </li>
-                        }else{
+                        
                             var identity = (ClaimsIdentity)User.Identity!;
                             var claims = identity.Claims.ToList();
                             var email = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
@@ -113,7 +106,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                             <div class="back"><img src="~/images/b2.jpg" style="width:40px;margin-bottom:30px;"></div>
                                         </a>
                                     </li>
-                        }
+                        
 
 
                     }

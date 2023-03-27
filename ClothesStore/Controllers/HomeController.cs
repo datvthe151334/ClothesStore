@@ -39,8 +39,7 @@ namespace ClothesStore.Controllers
         }
 
         [HttpGet]
-        [HttpGet]
-        public async Task<IActionResult> Login()
+        public async Task<IActionResult> SignIn()
         {
             if (!string.IsNullOrEmpty(HttpContext.Request.Cookies["accessToken"]))
             {
@@ -97,16 +96,15 @@ namespace ClothesStore.Controllers
 
             var name = "";
 
-            /* if (!Res.Result.IsSuccessStatusCode)
-             {
-                 *//*return StatusCode(StatusCodes.Status500InternalServerError);*//*
-                 return RedirectToAction("Index", "Home", new { @alertMessage = "Login fail!" });
+            if (!Res.Result.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index", "Home", new { @alertMessage = "Login fail!" });
 
-             }
-             else
-             {*/
+            }
+            else
+            {
 
-            var user = JsonConvert.DeserializeObject<AccountInfoTokenDTO>(Res.Result.Content.ReadAsStringAsync().Result);
+                var user = JsonConvert.DeserializeObject<AccountInfoTokenDTO>(Res.Result.Content.ReadAsStringAsync().Result);
 
             name = user.Name;
 
@@ -128,7 +126,7 @@ namespace ClothesStore.Controllers
             }
 
 
-            /*}*/
+            }
 
 
         }
