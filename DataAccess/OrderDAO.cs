@@ -39,7 +39,7 @@ namespace DataAccess
             {
                 using (var context = new ClothesStoreDBContext())
                 {
-                    order = await context.Orders.Include(x => x.Customer).Include(x => x.Employee).SingleOrDefaultAsync(x => x.OrderId == id);
+                    order = await context.Orders.Include(x => x.Customer).Include(x => x.Employee).Include(x => x.OrderDetails).ThenInclude(x => x.Product).SingleOrDefaultAsync(x => x.OrderId == id);
                 }
             }
             catch (Exception ex)

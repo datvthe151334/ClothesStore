@@ -1,4 +1,5 @@
-﻿using ClothesStoreAPI.Template;
+﻿using BusinessObject.DTO;
+using ClothesStoreAPI.Template;
 using System.Net;
 using System.Net.Mail;
 
