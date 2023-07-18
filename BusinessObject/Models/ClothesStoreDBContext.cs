@@ -15,6 +15,7 @@ namespace BusinessObject.Models
         public ClothesStoreDBContext(DbContextOptions<ClothesStoreDBContext> options)
             : base(options)
         {
+
         }
 
         public virtual DbSet<Account> Accounts { get; set; }
